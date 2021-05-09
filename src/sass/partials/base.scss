@@ -1,0 +1,146 @@
+/* more shadow scroll - start */
+.grid-comp-more-shadow-container {
+  position: relative;
+  overflow: hidden;
+
+  &::before,
+  &::after {
+    display: none;
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 30px;
+    border-radius: 50%;
+  }
+
+  &::before {
+    top: -30px;
+    box-shadow: $boxShadow2;
+  }
+
+  &::after {
+    bottom: -30px;
+    box-shadow: $boxShadow3;
+  }
+
+  &.has-top-content::before,
+  &.has-bottom-content::after {
+    display: block;
+  }
+}
+
+.grid-comp-more-shadow-content {
+  height: 100%;
+  overflow: auto;
+}
+/* more shadow scroll - end */
+
+/* search component - start */
+.grid-comp-search-comp-no-result {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  height: 60px;
+}
+
+.grid-comp-search-comp-container {
+  &.has-no-result {
+    .grid-comp-search-comp-no-result {
+      display: flex;
+    }
+  }
+}
+/* search component - end */
+
+/* input clear component - start */
+.grid-comp-input-clear-comp-clear {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: $inputIconWidth;
+  height: 20px;
+  margin-top: -10px;
+  color: $iconColor;
+  background-color: $primaryBg;
+}
+
+.grid-comp-input-clear-comp-container {
+  &.has-value {
+    .grid-comp-input-clear-comp-clear {
+      display: inline-flex;
+    }
+  }
+
+  &.icon-position-right {
+    .grid-comp-input-clear-comp-clear {
+      right: $inputIconWidth;
+    }
+  }
+}
+/* input clear component - end */
+
+/* accordion component - start */
+.grid-comp-accordion-header {
+  display: flex;
+  align-items: center;
+  height: $accordionHeight;
+  border-bottom: 1px solid $borderColor;
+  padding: 0 $accordionPadding;
+}
+
+.grid-comp-accordion-title {
+  @include ellipsis;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.grid-comp-accordion-header-button {
+  margin-left: auto;
+  color: $primaryColor;
+}
+
+.grid-comp-accordion-header-icon {
+  @include transition;
+}
+
+.grid-comp-accordion-body {
+  display: none;
+  position: relative;
+  padding: $accordionPadding;
+  box-shadow: $boxShadow4;
+
+  &::after {
+    content: '';
+    position: absolute;
+    height: 15px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    box-shadow: $boxShadow5;
+  }
+}
+
+.grid-comp-accordion-container {
+  &.active {
+    .grid-comp-accordion-header {
+      background-color: $primaryColorLight;
+    }
+
+    .grid-comp-accordion-header-icon {
+      @include prefix(transform, rotate(180deg));
+    }
+
+    .grid-comp-accordion-body {
+      display: block;
+    }
+  }
+
+  &:hover {
+    .grid-comp-accordion-title {
+      color: $primaryColor;
+    }
+  }
+}
+/* accordion component - end */

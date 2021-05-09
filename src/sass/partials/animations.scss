@@ -1,0 +1,86 @@
+.grid-comp-animation {
+  @include prefix(animation-duration, $animationDuration);
+  @include prefix(animation-fill-mode, both);
+}
+
+.grid-comp-animation-slide-in-right {
+  @include prefix(animation-name, grid-comp-animation-slide-in-right);
+}
+
+@-webkit-keyframes grid-comp-animation-slide-in-right {
+  from {
+    @include prefix(transform, translate3d(100%, 0, 0));
+  }
+
+  to {
+    @include prefix(transform, translate3d(0, 0, 0));
+  }
+}
+
+@keyframes grid-comp-animation-slide-in-right {
+  from {
+    @include prefix(transform, translate3d(100%, 0, 0));
+  }
+
+  to {
+    @include prefix(transform, translate3d(0, 0, 0));
+  }
+}
+
+@-webkit-keyframes grid-comp-animation-spin {
+  to {
+    @include prefix(transform, rotateZ(360deg));
+  }
+}
+
+@keyframes grid-comp-animation-spin {
+  to {
+    @include prefix(transform, rotateZ(360deg));
+  }
+}
+
+@-webkit-keyframes grid-comp-animation-rotate {
+  100% {
+    @include prefix(transform, rotate(360deg));
+  }
+}
+
+@keyframes grid-comp-animation-rotate {
+  100% {
+    @include prefix(transform, rotate(360deg));
+  }
+}
+
+@-webkit-keyframes grid-comp-animation-processing-circle-dash {
+  0% {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+  }
+
+  50% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -35px;
+  }
+
+  100% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -124px;
+  }
+}
+
+@keyframes grid-comp-animation-processing-circle-dash {
+  0% {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+  }
+
+  50% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -35px;
+  }
+
+  100% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -124px;
+  }
+}

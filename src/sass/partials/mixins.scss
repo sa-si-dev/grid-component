@@ -1,0 +1,33 @@
+@mixin position-sticky-top {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+}
+
+@mixin position-sticky-left {
+  position: -webkit-sticky;
+  position: sticky;
+  left: 0;
+}
+
+@mixin ellipsis {
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin prefix($property, $value) {
+  #{'-webkit-' + $property}: $value;
+  #{$property}: $value;
+}
+
+@mixin transition {
+  @include prefix(transition-duration, $transitionDuration);
+}
+
+@mixin virtual-select-checkbox-checked {
+  border-color: $primaryColor;
+  border-left-color: transparent;
+  border-top-color: transparent;
+}

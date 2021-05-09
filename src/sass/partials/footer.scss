@@ -1,0 +1,104 @@
+.grid-comp-footer {
+  position: relative;
+  height: $footerHeight;
+  background: $primaryBg;
+  @include prefix(box-shadow, $boxShadow1);
+  z-index: $minZIndex + 2;
+  padding: 0 $colPaddingHorizontal;
+}
+
+.grid-comp-footer-right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 100%;
+}
+
+.grid-comp-grand-total-container,
+.grid-comp-per-page-container {
+  position: relative;
+  padding-right: 10px;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 0;
+    margin-top: -8px;
+    height: 16px;
+    border-left: 1px solid $footerBorderColor;
+  }
+}
+
+.grid-comp-per-page-dropdown {
+  &.grid-comp-select,
+  .vscomp-toggle-button {
+    height: $inputHeightSmall;
+  }
+}
+
+.grid-comp-grand-total-label {
+  display: inline-flex;
+  margin-right: 4px;
+}
+
+.grid-comp-grand-total-button {
+  display: inline-flex;
+  color: $primaryColor;
+  font-size: $fontSizeSmall;
+  cursor: pointer;
+}
+
+.grid-comp-grand-total-text,
+.grid-comp-grand-total-loader {
+  display: none;
+}
+
+.grid-comp-grand-total-container {
+  display: inline-flex;
+  align-items: center;
+
+  &.has-grand-total {
+    .grid-comp-grand-total-button {
+      display: none;
+    }
+
+    .grid-comp-grand-total-text {
+      display: inline-flex;
+    }
+  }
+
+  &.getting-grand-total {
+    .grid-comp-grand-total-button {
+      display: none;
+    }
+
+    .grid-comp-grand-total-loader {
+      display: inline-flex;
+    }
+  }
+}
+
+.grid-comp-per-page-container {
+  width: 180px;
+  padding-right: 0;
+}
+
+.grid-comp-page-nav-container {
+  display: inline-flex;
+  user-select: none;
+}
+
+.grid-comp-rows-count-container {
+  margin: 0 8px;
+}
+
+.grid-comp-page-nav-button {
+  margin: 0 8px;
+  color: $primaryColor;
+
+  &.disabled {
+    color: $iconColor;
+    cursor: not-allowed;
+  }
+}

@@ -1,0 +1,62 @@
+.grid-comp-wrapper {
+  .vscomp-wrapper {
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+  }
+
+  .vscomp-arrow::after {
+    border-right-color: $primaryColor;
+    border-bottom-color: $primaryColor;
+  }
+
+  .vscomp-toggle-button {
+    height: $inputHeight;
+  }
+
+  .vscomp-wrapper {
+    .checkbox-icon::after {
+      border: 1px solid $primaryColor;
+    }
+
+    &.multiple {
+      .vscomp-option.selected .checkbox-icon::after {
+        @include virtual-select-checkbox-checked;
+      }
+    }
+
+    .checkbox-icon.checked::after {
+      @include virtual-select-checkbox-checked;
+    }
+
+    &.no-border {
+      .vscomp-toggle-button {
+        border: none;
+        box-shadow: none !important;
+      }
+    }
+
+    &:focus,
+    &.focused {
+      .vscomp-toggle-button {
+        border-color: $primaryColor;
+        box-shadow: none !important;
+      }
+    }
+  }
+
+  .vscomp-option {
+    &.selected {
+      color: $primaryColor;
+      background-color: transparent;
+    }
+
+    &.focused {
+      background-color: $primaryColorLight;
+    }
+  }
+
+  .vscomp-clear-button:hover {
+    background-color: transparent;
+  }
+}

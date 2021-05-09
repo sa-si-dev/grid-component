@@ -1,0 +1,198 @@
+.grid-comp-filters-box-wrapper {
+  display: none;
+  /* TODO - remove below line */
+  // display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: $transparentBg;
+  z-index: $minZIndex + 6;
+}
+
+.grid-comp-filters-box-container {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 400px;
+  height: 100%;
+  background: $primaryBg;
+}
+
+.grid-comp-filters-box-header {
+  display: flex;
+  align-items: center;
+  background-color: $secondaryBg;
+  height: $filtersBoxHeaderHeight;
+  padding: 0 $filtersBoxPadding;
+}
+
+.grid-comp-filters-box-body {
+  height: calc(100% - #{$filtersBoxHeaderHeight + $filtersBoxFooterHeight});
+  overflow: auto;
+}
+
+.grid-comp-filters-box-footer {
+  display: flex;
+  align-items: center;
+  height: $filtersBoxFooterHeight;
+  padding: 0 $filtersBoxPadding;
+
+  .grid-comp-button {
+    margin-right: 10px;
+  }
+}
+
+.grid-comp-filters-box-title {
+  font-size: $fontSizeMedium;
+  font-weight: $fontWeightSemiBold;
+}
+
+.grid-comp-filters-box-reset-button {
+  color: $primaryColor;
+  margin-left: auto;
+  cursor: pointer;
+}
+
+.grid-comp-filter-box-clear-button {
+  display: none;
+  margin-left: auto;
+}
+
+.grid-comp-filter-section-selected-count {
+  display: none;
+  font-size: 10px;
+  line-height: 12px;
+  padding: 2px 5px;
+  border-radius: 5px;
+  background: $primaryColor;
+  color: $primaryFontColor;
+  margin-right: 10px;
+}
+
+.grid-comp-filter-type-dropdown-container {
+  display: none;
+  width: 140px;
+  min-width: 140px;
+  margin-right: 10px;
+}
+
+.grid-comp-filter-type-dropdown {
+  font-size: $fontSizeSmall;
+
+  &.grid-comp-select,
+  .vscomp-toggle-button {
+    height: $inputHeightSmall;
+  }
+}
+
+.grid-comp-filter-field-container {
+  .grid-comp-input-container,
+  .grid-comp-dropdown,
+  .grid-comp-select-container {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+.grid-comp-filter-section {
+  &.has-value {
+    .grid-comp-filter-section-selected-count,
+    .grid-comp-filter-box-clear-button {
+      display: inline-flex;
+    }
+
+    .grid-comp-accordion-header-button {
+      margin-left: 10px;
+    }
+  }
+
+  &.active {
+    .grid-comp-filter-type-dropdown-container {
+      display: inline-block;
+    }
+  }
+}
+
+.grid-comp-filters-tags-wrapper {
+  display: none;
+  position: relative;
+  width: 100%;
+  height: $filtersTagsHeight;
+  background-color: $primaryBg;
+}
+
+.grid-comp-filters-tags-container {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  position: absolute;
+  top: 3px;
+  left: #{$colPaddingHorizontal - $filtersTagsContainerPadding};
+  z-index: $minZIndex + 4;
+  width: calc(80% - #{$colPaddingHorizontal});
+  max-height: 50vh;
+  padding: #{$filtersTagsContainerPadding - 3px} #{$filtersTagsContainerPadding + $filtersTagsMoreButtonWidth} 0 $filtersTagsContainerPadding;
+  background-color: $primaryBg;
+  font-size: $fontSizeSmall;
+  border-radius: 4px;
+  overflow: auto;
+}
+
+.grid-comp-filters-tags-more-button {
+  display: none;
+  position: absolute;
+  top: #{$filtersTagsContainerPadding - 3px};
+  right: $filtersTagsContainerPadding;
+  width: $filtersTagsMoreButtonWidth;
+  height: 24px;
+  border: 1px solid $primaryColor;
+  border-radius: 3px;
+  margin-top: 3px;
+
+  .grid-comp-icon {
+    @include transition;
+    color: $primaryColor;
+  }
+}
+
+.grid-comp-filter-tag-name {
+  margin: 3px 8px $filtersTagsContainerPadding 0;
+  color: $fontColorLight;
+}
+
+.grid-comp-filter-tag-value {
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  margin: 3px 5px $filtersTagsContainerPadding 0;
+  padding: 0 7px 0 10px;
+  border: 1px solid $borderColorMedium;
+  border-radius: 3px;
+
+  &.last-value {
+    margin-right: 20px;
+  }
+}
+
+.grid-comp-filter-tag-value-text {
+  @include ellipsis;
+  max-width: 100px;
+}
+
+.grid-comp-filter-tag-remove-button {
+  margin-left: 8px;
+
+  .grid-comp-icon {
+    width: 12px !important;
+    height: 12px !important;
+    color: $iconColor;
+  }
+
+  &:hover {
+    .grid-comp-icon {
+      color: $primaryColor;
+    }
+  }
+}

@@ -1,0 +1,69 @@
+.grid-comp-settings-popover {
+  width: 300px;
+
+  .grid-comp-more-shadow-container {
+    width: 100%;
+  }
+}
+
+.grid-comp-settings-popover-header {
+  width: 100%;
+  padding: 0 20px;
+}
+
+.grid-comp-settings-popover-search-container {
+  width: 100%;
+}
+
+.grid-comp-settings-popover-body {
+  width: 100%;
+  min-height: 10vh;
+  max-height: 50vh;
+  padding: 10px 0;
+}
+
+.grid-comp-settings-column-item {
+  display: flex;
+  align-items: center;
+  height: 36px;
+  margin: 0 20px;
+  padding: 0 4px;
+  border-bottom: 1px solid $borderColor;
+
+  &:hover {
+    background-color: $primaryColorLight;
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.grid-comp-settings-column-item-name {
+  @include ellipsis;
+  width: calc(100% - #{$switchWidth});
+  padding-right: 4px;
+}
+
+.grid-comp-settings-popover-footer {
+  display: none;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  height: $settingsPopoverFooterHeight;
+  padding: 0 20px;
+  background-color: $primaryBg;
+  border-top: 1px solid $borderColor;
+
+  .grid-comp-button {
+    margin-left: 8px;
+  }
+}
+
+.grid-comp-settings-popover {
+  &.has-value-changed {
+    .grid-comp-settings-popover-footer {
+      display: flex;
+    }
+  }
+}

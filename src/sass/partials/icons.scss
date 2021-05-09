@@ -1,0 +1,41 @@
+/* change font size in specific icon class to change width/height */
+.grid-comp-icon {
+  display: inline-block;
+  font-size: $iconSize;
+  width: 1em;
+  height: 1em;
+  stroke-width: 0;
+  stroke: currentColor;
+  fill: currentColor;
+  pointer-events: none;
+}
+
+.grid-comp-icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.grid-comp-icon-col-sort,
+.grid-comp-icon-col-sort-active {
+  font-size: 14px;
+}
+
+.grid-comp-icon-col-sort-active.desc {
+  @include prefix(transform, rotate(180deg));
+}
+
+.grid-comp-icon-processing-circle {
+  svg {
+    @include prefix(animation, grid-comp-animation-rotate 2s linear infinite);
+  }
+
+  circle {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+    stroke-linecap: round;
+    stroke: $primaryColor;
+    @include prefix(animation, grid-comp-animation-processing-circle-dash 1.5s ease-in-out infinite);
+  }
+}

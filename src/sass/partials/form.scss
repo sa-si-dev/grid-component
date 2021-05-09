@@ -1,0 +1,188 @@
+.grid-comp-form-ele {
+  font-family: $fontFamily;
+  font-size: $fontSize;
+  color: $fontColor;
+  background-color: $primaryBg;
+
+  &:focus,
+  &:focus-visible {
+    outline: none;
+  }
+}
+
+.grid-comp-select {
+  width: 100%;
+  height: $inputHeight;
+  padding: 7px 30px 7px 10px;
+  border: none;
+  border-bottom: 1px solid $inputBorderColor;
+  cursor: pointer;
+}
+
+.grid-comp-select-container {
+  position: relative;
+  width: 100%;
+  max-width: 250px;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    pointer-events: none;
+  }
+
+  &::before {
+    top: 1px;
+    right: 1px;
+    width: $dropdownArrowWidth;
+    height: calc(100% - 2px);
+    background-color: $primaryBg;
+  }
+
+  &::after {
+    top: 50%;
+    right: #{$dropdownArrowWidth / 2};
+    border: 1px solid transparent;
+    border-right-color: $primaryColor;
+    border-bottom-color: $primaryColor;
+    width: $dropdownArrowSize;
+    height: $dropdownArrowSize;
+    margin-top: -6px;
+    margin-right: -4px;
+    @include prefix(transform, rotate(45deg));
+  }
+
+  &.no-border .grid-comp-form-ele {
+    border: none;
+  }
+
+  &.full-border .grid-comp-form-ele {
+    border: 1px solid $inputBorderColor;
+    padding: 0 8px;
+  }
+
+  .grid-comp-form-ele:focus {
+    border-color: $primaryColor;
+  }
+}
+
+.grid-comp-switch {
+  display: inline-flex;
+
+  input {
+    position: absolute;
+    width: 0;
+    height: 0;
+    opacity: 0;
+  }
+
+  label {
+    display: inline-flex;
+    position: relative;
+    width: $switchWidth;
+    height: $switchHeight;
+    background-color: $switchBg;
+    border-radius: 10px;
+    cursor: pointer;
+    @include prefix(transition-duration, 0.2s);
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: #{$switchHeight - 4px};
+      height: #{$switchHeight - 4px};
+      background-color: #fff;
+      border-radius: 50%;
+      @include prefix(transition-duration, 0.2s);
+    }
+  }
+
+  input:checked + label {
+    background-color: $primaryColor;
+
+    &::after {
+      left: #{$switchWidth - $switchHeight + 2px};
+    }
+  }
+}
+
+.grid-comp-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: $primaryFontColor;
+  background-color: $primaryColor;
+  border: 1px solid $primaryColor;
+  border-radius: 14px;
+  font-size: $fontSize;
+  font-family: $fontFamily;
+  height: 30px;
+  padding: 0 20px;
+  cursor: pointer;
+}
+
+.grid-comp-button-secondary {
+  background-color: transparent;
+  border-color: $primaryColor;
+  color: $primaryColor;
+}
+
+.grid-comp-button-small {
+  padding: 0 14px;
+  font-size: $fontSizeSmall;
+}
+
+.grid-comp-input-container {
+  position: relative;
+  width: $inputWidth;
+}
+
+.grid-comp-input {
+  width: 100%;
+  height: $inputHeight;
+  padding: 0;
+  border: none;
+  border-bottom: 1px solid $inputBorderColor;
+
+  &.full-border {
+    border: 1px solid $inputBorderColor;
+    padding: 0 8px;
+  }
+
+  &:focus {
+    border-color: $primaryColor;
+  }
+}
+
+.grid-comp-input-icon {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  position: absolute;
+  top: 1px;
+  right: 0;
+  width: $inputIconWidth;
+  height: #{$inputHeight - 2px};
+  background-color: $primaryBg;
+  color: $primaryColor;
+
+  .grid-comp-icon {
+    font-size: $iconSizeSmall;
+  }
+}
+
+.grid-comp-input-container {
+  &.icon-position-left {
+    .grid-comp-input {
+      padding-left: $inputIconWidth;
+    }
+
+    .grid-comp-input-icon {
+      justify-content: flex-start;
+      right: auto;
+      left: 0;
+    }
+  }
+}

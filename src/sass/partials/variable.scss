@@ -1,0 +1,79 @@
+$primaryColor: #ff6502;
+$primaryColorLight: #fff7f3;
+$primaryFontColor: #fff;
+$primaryBg: #fff;
+$secondaryBg: #fafafa;
+$fontColor: rgba(0, 0, 0, 0.8);
+$fontColorHead: rgba(0, 0, 0, 0.6);
+$fontColorLight: rgba(0, 0, 0, 0.6);
+$iconColor: $fontColorHead;
+$borderColor: #f5f5f5;
+$borderColorMedium: #e6e6e6;
+$inputBorderColor: #ecedee;
+$footerBorderColor: #ccc;
+$rowHoverBg: $primaryColorLight;
+$rowHoverColor: $primaryColor;
+$resizingLineColor: $primaryColor;
+$switchBg: #dbdbdb;
+$transparentBg: rgba(0, 0, 0, 0.8);
+
+$fontFamily: inherit;
+$fontSize: 14px;
+$fontSizeSmall: 13px;
+$fontSizeMedium: 16px;
+$fontSizeLarge: 18px;
+$fontWeight: 400;
+$fontWeightSemiBold: 500;
+$fontSizeHead: 13px;
+$theadHeight: 40px;
+$trHeight: 45px;
+$headerHeight: 60px;
+$footerHeight: 36px;
+
+$colPaddingLeft: 15px;
+$colPaddingRight: 15px;
+$colPaddingHorizontal: $colPaddingLeft + $colPaddingRight;
+$colLineHeight: 29px;
+
+$iconSize: 16px;
+$iconSizeSmall: 14px;
+$iconSizeMedium: 18px;
+$resizeButtonSize: $iconSize;
+$headerIconButtonSize: 36px;
+$minZIndex: 1;
+
+$stickyColShadowWidth: 10px;
+$stickyColShadowBg: linear-gradient(to right, $primaryBg, transparent);
+$stickyColShadowBgHover: linear-gradient(to right, $rowHoverBg, transparent);
+
+$boxShadow1: 0 -1px 7px 0 rgba(0, 0, 0, 0.07);
+$boxShadow2: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+$boxShadow3: 0 -4px 8px 0 rgba(0, 0, 0, 0.2);
+$boxShadow4: inset 0px 11px 8px -10px rgba(0, 0, 0, 0.16);
+$boxShadow5: inset 0px -11px 7px -12px rgba(0, 0, 0, 0.16);
+$boxShadow6: 2px 2px 8px rgba(0, 0, 0, 0.22);
+
+$dropdownArrowWidth: 30px;
+$dropdownArrowSize: 8px;
+
+$inputWidth: 200px;
+$inputHeight: 36px;
+$inputHeightSmall: 34px;
+$inputIconWidth: $iconSizeSmall + 8px;
+$switchWidth: 28px;
+$switchHeight: $switchWidth / 2;
+
+$settingsPopoverFooterHeight: 50px;
+
+$filtersBoxHeaderHeight: 50px;
+$filtersBoxFooterHeight: 60px;
+$filtersBoxPadding: 20px;
+$filtersTagsHeight: 50px;
+$filtersTagsMoreButtonWidth: 34px;
+$filtersTagsContainerPadding: 10px;
+
+$animationDuration: 300ms;
+$transitionDuration: 250ms;
+
+$accordionHeight: 40px;
+$accordionPadding: $filtersBoxPadding;
