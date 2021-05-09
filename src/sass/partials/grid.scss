@@ -59,6 +59,7 @@
   margin-top: -#{$resizeButtonSize / 2};
   opacity: 0;
   cursor: col-resize;
+  z-index: $minZIndex + 1;
 }
 
 .grid-comp-table-wrapper {
@@ -87,12 +88,26 @@
 }
 
 .grid-comp-col-sticky-shadow {
+  display: none;
   position: absolute;
   top: 0;
-  right: -#{$stickyColShadowWidth + $colPaddingRight};
-  width: $stickyColShadowWidth;
-  height: 100%;
-  background: $stickyColShadowBg;
+  right: 0;
+  bottom: 0;
+  width: 10px;
+  box-shadow: $boxShadow7;
+  pointer-events: none;
+}
+
+.grid-comp-more-right-column-shadow {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 40px;
+  z-index: $minZIndex + 6;
+  background: $stickyColRightShadowBg;
+  pointer-events: none;
 }
 
 .grid-comp-col-content {
@@ -162,10 +177,6 @@
       .grid-comp-col,
       .grid-comp-col-content {
         background-color: $rowHoverBg;
-      }
-
-      .grid-comp-col-sticky-shadow {
-        background: $stickyColShadowBgHover;
       }
     }
   }
@@ -242,6 +253,18 @@
   &.has-more-filters-tags {
     .grid-comp-filters-tags-more-button {
       display: inline-flex;
+    }
+  }
+
+  &.has-left-column {
+    .grid-comp-col-sticky-shadow {
+      display: block;
+    }
+  }
+
+  &.has-right-column {
+    .grid-comp-more-right-column-shadow {
+      display: block;
     }
   }
 

@@ -42,9 +42,7 @@ $resizeButtonSize: $iconSize;
 $headerIconButtonSize: 36px;
 $minZIndex: 1;
 
-$stickyColShadowWidth: 10px;
-$stickyColShadowBg: linear-gradient(to right, $primaryBg, transparent);
-$stickyColShadowBgHover: linear-gradient(to right, $rowHoverBg, transparent);
+$stickyColRightShadowBg: linear-gradient(to left, $primaryBg, transparent);
 
 $boxShadow1: 0 -1px 7px 0 rgba(0, 0, 0, 0.07);
 $boxShadow2: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
@@ -52,6 +50,7 @@ $boxShadow3: 0 -4px 8px 0 rgba(0, 0, 0, 0.2);
 $boxShadow4: inset 0px 11px 8px -10px rgba(0, 0, 0, 0.16);
 $boxShadow5: inset 0px -11px 7px -12px rgba(0, 0, 0, 0.16);
 $boxShadow6: 2px 2px 8px rgba(0, 0, 0, 0.22);
+$boxShadow7: 5px 0px 7px 0 rgba(0, 0, 0, 0.07);
 
 $dropdownArrowWidth: 30px;
 $dropdownArrowSize: 8px;

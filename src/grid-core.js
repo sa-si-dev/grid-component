@@ -95,6 +95,7 @@ export class GridCoreComponent {
 
           <div class="grid-comp-rows-loader"></div>
           <div class="grid-comp-no-rows">${this.i18n('no.rows')}</div>
+          <div class="grid-comp-more-right-column-shadow"></div>
           <div class="grid-comp-col-resizing-line"></div>
         </div>
 
@@ -253,6 +254,7 @@ export class GridCoreComponent {
     let classNames = 'grid-comp-col';
     let textContainerClassNames = 'grid-comp-col-text-container';
     let rightSection = '';
+    let rightOutSection = '';
     let sortIcon = '';
     let resizable = colData.resizable;
     let sortable = colData.sortable;
@@ -279,7 +281,7 @@ export class GridCoreComponent {
 
     if (colData.sticky) {
       classNames += ' grid-comp-col-sticky';
-      rightSection += '<span class="grid-comp-col-sticky-shadow"></span>';
+      rightOutSection += '<span class="grid-comp-col-sticky-shadow"></span>';
     }
 
     if (resizable) {
@@ -306,6 +308,7 @@ export class GridCoreComponent {
         </div>
         ${rightSection}
       </div>
+      ${rightOutSection}
     </th>`;
 
     return html;
@@ -347,7 +350,7 @@ export class GridCoreComponent {
     let value = key ? rowData[colData.key] : '';
     let classNames = 'grid-comp-col';
     let textTooltip = this.getTooltipAttrText(value, true);
-    let rightSection = '';
+    let rightOutSection = '';
     let colStyle = {};
 
     let colAttrData = {
@@ -374,7 +377,7 @@ export class GridCoreComponent {
 
     if (colData.sticky) {
       classNames += ' grid-comp-col-sticky';
-      rightSection += '<span class="grid-comp-col-sticky-shadow"></span>';
+      rightOutSection += '<span class="grid-comp-col-sticky-shadow"></span>';
     }
 
     if (colData.align) {
@@ -384,8 +387,8 @@ export class GridCoreComponent {
     html = `<td class="${classNames}" ${DomUtils.getAttributesText(colAttrData)}>
       <div class="grid-comp-col-content" ${DomUtils.getStyleText(colStyle)}>
         ${html}
-        ${rightSection}
       </div>
+      ${rightOutSection}
     </td>`;
 
     return html;
@@ -977,6 +980,8 @@ export class GridCoreComponent {
     this.addEvent(this.$pageNavPrev, 'click', 'onPageNavPrevClick');
     this.addEvent(this.$pageNavNext, 'click', 'onPageNavNextClick');
 
+    this.addEvent(this.$tableContainer, 'scroll', 'onTableContainerScroll');
+
     if (this.showFilters) {
       this.addEvent(this.$filtersButton, 'click', 'onFiltersButtonClick');
       this.addEvent(this.$filtersBoxCancelButton, 'click', 'onFiltersBoxCancelButtonClick');
@@ -1156,6 +1161,10 @@ export class GridCoreComponent {
   onExportButtonClick(e) {
     this.exportRows(e.target);
   }
+
+  onTableContainerScroll() {
+    this.setTableColumnShadow();
+  }
   /** dom event methods - end */
 
   /** before event methods - start */
@@ -1185,6 +1194,7 @@ export class GridCoreComponent {
     this.renderFooter();
     this.setVisibleColumns();
     this.setBodyHeight();
+    this.setTableColumnShadow();
 
     if (this.showFilters) {
       this.renderFiltersBox();
@@ -1794,6 +1804,16 @@ export class GridCoreComponent {
     filtersValue.forEach((d) => {
       reqData[`${d.key}[${d.criteria}]`] = d.value;
     });
+  }
+
+  setTableColumnShadow() {
+    let $tableContainer = this.$tableContainer;
+    let scrollLeft = $tableContainer.scrollLeft;
+    let hasLeftColumn = scrollLeft > 0;
+    let hasRightColumn = $tableContainer.scrollWidth > $tableContainer.clientWidth + scrollLeft;
+
+    DomUtils.toggleClass(this.$wrapper, 'has-left-column', hasLeftColumn);
+    DomUtils.toggleClass(this.$wrapper, 'has-right-column', hasRightColumn);
   }
   /** set methods - end */
 

@@ -15,6 +15,7 @@ const gridsConfig = {
         name: 'First Name',
         key: 'first_name',
         width: '150px',
+        alwaysShow: true,
         filter: {},
       },
       {
@@ -23,7 +24,6 @@ const gridsConfig = {
         resizable: false,
         width: '150px',
         key: 'last_name',
-        alwaysShow: true,
         filter: {},
       },
       {
