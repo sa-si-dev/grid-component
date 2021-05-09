@@ -11,6 +11,14 @@ class GridComponent extends GridCoreComponent {
     let reqData = this.getReqData();
 
     anyMehodToGetDataFromServer(reqData).then((res) => {
+      /**
+       * @property {object[]} rows - List of rows
+       * @property {object} meta
+       * @property {number} [meta.page=1] - Page number
+       * @property {number} meta.perPage - No.of rows per page
+       * @property {boolean} [meta.hasNextPage=false] - Has more rows to show on next page
+       * @property {number} [meta.grandTotal] - Total no.of rows available, to show count on footer
+       */
       this.afterGetRows(res.rows, res.meta);
     });
   }
@@ -21,6 +29,9 @@ class GridComponent extends GridCoreComponent {
     let reqData = this.getReqDataForGrandTotal();
 
     anyMehodToGetDataFromServer(reqData).then((res) => {
+      /**
+       * @property {number} grandTotal - Total no.of rows available, to show count on footer
+       */
       this.afterGetGrandTotal(res.grandTotal);
     });
   }
