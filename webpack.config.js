@@ -4,7 +4,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const FileManagerPlugin = require('filemanager-webpack-plugin');
 
-const banner = `Grid Component v1.0.0
+const banner = `Grid Component v1.0.1
 https://sa-si-dev.github.io/grid-component
 Licensed under MIT (https://github.com/sa-si-dev/grid-component/blob/master/LICENSE)`;
 

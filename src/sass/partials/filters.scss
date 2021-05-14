@@ -1,13 +1,11 @@
 .grid-comp-filters-box-wrapper {
   display: none;
-  /* TODO - remove below line */
-  // display: block;
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: $transparentBg;
+  background-color: $popupBg;
   z-index: $minZIndex + 6;
 }
 
@@ -23,7 +21,7 @@
 .grid-comp-filters-box-header {
   display: flex;
   align-items: center;
-  background-color: $secondaryBg;
+  background-color: $popupHeaderBg;
   height: $filtersBoxHeaderHeight;
   padding: 0 $filtersBoxPadding;
 }
@@ -168,7 +166,8 @@
   height: 24px;
   margin: 3px 5px $filtersTagsContainerPadding 0;
   padding: 0 7px 0 10px;
-  border: 1px solid $borderColorMedium;
+  border: 1px solid $filterTagBorderColor;
+  background-color: $filterTagBg;
   border-radius: 3px;
 
   &.last-value {

@@ -1,3 +1,18 @@
+.grid-comp-wrapper {
+  a {
+    color: $aTagColor;
+  }
+}
+
+.grid-comp-tooltip {
+  color: $tooltipFontColor;
+
+  &,
+  & .tooltip-comp-arrow::before {
+    background-color: $tooltipBg;
+  }
+}
+
 /* more shadow scroll - start */
 .grid-comp-more-shadow-container {
   position: relative;
@@ -63,7 +78,7 @@
   height: 20px;
   margin-top: -10px;
   color: $iconColor;
-  background-color: $primaryBg;
+  background-color: $inputBg;
 }
 
 .grid-comp-input-clear-comp-container {
@@ -125,7 +140,7 @@
 .grid-comp-accordion-container {
   &.active {
     .grid-comp-accordion-header {
-      background-color: $primaryColorLight;
+      background-color: $activeBg;
     }
 
     .grid-comp-accordion-header-icon {

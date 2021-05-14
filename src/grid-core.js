@@ -20,6 +20,8 @@ export class GridCoreComponent {
    * @property {boolean} [showFilters=false] - Show filters button to open filters
    * @property {boolean} [showSettings=false] - Show settings button to customize columns
    * @property {boolean} [showSerialNumberCol=false] - Show serial number column
+   * @property {string} [theme=light] - Default available themes are light and dark. But you could define custom themes and use here.
+   * @property {string} [language=default] - Language name to get i18n text
    * @property {string} [tooltipFontSize=14px] - Font size for tooltip
    * @property {string} [tooltipAlignment=center] - CSS Text alignment for tooltip
    * @property {string} [tooltipEnterDelay=300] - Delay time before showing tooltip (in milliseconds)
@@ -78,7 +80,7 @@ export class GridCoreComponent {
 
   /** render methods - start */
   render() {
-    let html = `<div class="grid-comp-wrapper" data-unique-id="${this.uniqueId}">
+    let html = `<div class="grid-comp-wrapper grid-comp-theme-${this.theme}" data-unique-id="${this.uniqueId}">
         <div class="grid-comp-header grid-comp-hide"></div>
 
         <div class="grid-comp-filters-tags-wrapper">
@@ -1417,6 +1419,8 @@ export class GridCoreComponent {
     this.perPageOptions = options.perPageOptions;
     this.uniqueKey = options.uniqueKey;
     this.apiUrl = options.apiUrl;
+    this.theme = options.theme.toLowerCase();
+    this.language = options.language.toLowerCase();
     this.scrollableContent = convertToBoolean(options.scrollableContent);
     this.rowsFromServer = convertToBoolean(options.rowsFromServer);
     this.resizable = convertToBoolean(options.resizable);
@@ -1461,6 +1465,8 @@ export class GridCoreComponent {
       disableLocalstorage: false,
       showSerialNumberCol: false,
       perPageOptions: [25, 50, 100],
+      theme: 'light',
+      language: 'default',
       tooltipFontSize: '14px',
       tooltipAlignment: 'center',
       tooltipEnterDelay: 200,
@@ -1485,6 +1491,8 @@ export class GridCoreComponent {
       'data-show-settings': 'showSettings',
       'data-disable-localstorage': 'disableLocalstorage',
       'data-show-serial-number-col': 'showSerialNumberCol',
+      'data-theme': 'theme',
+      'data-language': 'default',
       'data-tooltip-font-size': 'tooltipFontSize',
       'data-tooltip-alignment': 'tooltipAlignment',
       'data-tooltip-enter-delay': 'tooltipEnterDelay',
@@ -1505,7 +1513,14 @@ export class GridCoreComponent {
   }
 
   setI18n() {
-    this.i18nData = i18n['default'];
+    let language = this.language;
+    let i18nData = Object.assign({}, i18n.default);
+
+    if (language !== 'default') {
+      i18nData = Object.assign(i18nData, i18n[language]);
+    }
+
+    this.i18nData = i18nData;
   }
 
   setColumns(columns = []) {
@@ -1815,6 +1830,20 @@ export class GridCoreComponent {
     DomUtils.toggleClass(this.$wrapper, 'has-left-column', hasLeftColumn);
     DomUtils.toggleClass(this.$wrapper, 'has-right-column', hasRightColumn);
   }
+
+  setTheme(themeName) {
+    if (!themeName) {
+      return;
+    }
+
+    themeName = themeName.toLowerCase();
+    let oldThemeClass = 'grid-comp-theme-' + this.theme;
+    let themeClass = 'grid-comp-theme-' + themeName;
+    this.theme = themeName;
+
+    DomUtils.removeClass(this.$wrapper, oldThemeClass);
+    DomUtils.addClass(this.$wrapper, themeClass);
+  }
   /** set methods - end */
 
   /** get methods - start */
@@ -1865,6 +1894,7 @@ export class GridCoreComponent {
       'data-tooltip-alignment': this.tooltipAlignment,
       'data-tooltip-ellipsis-only': ellipsisOnly,
       'data-tooltip-allow-html': allowHtml,
+      'data-tooltip-additional-classes': `grid-comp-tooltip grid-comp-theme-${this.theme}`,
     };
 
     return DomUtils.getAttributesText(data);
@@ -2297,9 +2327,27 @@ export class GridCoreComponent {
     return config.GridCoreVersion;
   }
 
-  static onResizeMethod() {
+  static getAllInstances() {
+    let instances = [];
+
     document.querySelectorAll('.grid-comp-wrapper').forEach(($ele) => {
-      $ele.gridComp.onResize();
+      if ($ele.gridComp) {
+        instances.push($ele.gridComp);
+      }
+    });
+
+    return instances;
+  }
+
+  static onResizeMethod() {
+    GridCoreComponent.getAllInstances().forEach((gridComp) => {
+      gridComp.onResize();
+    });
+  }
+
+  static setTheme(themeName) {
+    GridCoreComponent.getAllInstances().forEach((gridComp) => {
+      gridComp.setTheme(themeName);
     });
   }
   /** static methods - end */

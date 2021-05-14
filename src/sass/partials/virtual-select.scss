@@ -12,6 +12,12 @@
 
   .vscomp-toggle-button {
     height: $inputHeight;
+    background-color: $inputBg;
+    border-color: $inputBorderColor;
+  }
+
+  .vscomp-dropbox {
+    background-color: $inputBg;
   }
 
   .vscomp-wrapper {
@@ -52,11 +58,27 @@
     }
 
     &.focused {
-      background-color: $primaryColorLight;
+      background-color: $activeBg;
+    }
+  }
+
+  .vscomp-clear-icon {
+    &::before,
+    &::after {
+      opacity: 0.5;
+      background-color: $fontColor;
     }
   }
 
   .vscomp-clear-button:hover {
     background-color: transparent;
+
+    .vscomp-clear-icon {
+      &::before,
+      &::after {
+        opacity: 1;
+        background-color: $fontColor;
+      }
+    }
   }
 }

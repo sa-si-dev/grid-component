@@ -2,7 +2,7 @@
   font-family: $fontFamily;
   font-size: $fontSize;
   color: $fontColor;
-  background-color: $primaryBg;
+  background-color: $inputBg;
 
   &:focus,
   &:focus-visible {
@@ -36,7 +36,7 @@
     right: 1px;
     width: $dropdownArrowWidth;
     height: calc(100% - 2px);
-    background-color: $primaryBg;
+    background-color: $inputBg;
   }
 
   &::after {
@@ -93,7 +93,7 @@
       left: 2px;
       width: #{$switchHeight - 4px};
       height: #{$switchHeight - 4px};
-      background-color: #fff;
+      background-color: $switchCircle;
       border-radius: 50%;
       @include prefix(transition-duration, 0.2s);
     }
@@ -165,7 +165,7 @@
   right: 0;
   width: $inputIconWidth;
   height: #{$inputHeight - 2px};
-  background-color: $primaryBg;
+  background-color: $inputBg;
   color: $primaryColor;
 
   .grid-comp-icon {

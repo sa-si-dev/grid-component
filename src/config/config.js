@@ -1,5 +1,5 @@
 export const config = {
-  GridCoreVersion: 'v1.0.0',
+  GridCoreVersion: 'v1.0.1',
 
   headerHeight: '60px',
   filtersTagsHeight: '50px',

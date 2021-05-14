@@ -113,7 +113,6 @@
 .grid-comp-col-content {
   display: flex;
   position: relative;
-  background-color: $primaryBg;
   width: 200px;
 }
 
@@ -174,8 +173,7 @@
       background-color: $rowHoverBg;
       color: $rowHoverColor;
 
-      .grid-comp-col,
-      .grid-comp-col-content {
+      .grid-comp-col {
         background-color: $rowHoverBg;
       }
     }
@@ -218,7 +216,7 @@
   left: 0;
   width: 100%;
   height: calc(100% - #{$theadHeight + 2px});
-  background-color: rgba(255, 255, 255, 0.7);
+  background-color: $rowsLoaderBg;
   z-index: $minZIndex + 4;
 
   &::before {
@@ -228,13 +226,19 @@
     opacity: 0.7;
     border-radius: 50%;
     background-color: $primaryBg;
-    box-shadow: -4px -5px 3px -3px rgba(0, 0, 0, 0.3);
+    box-shadow: -4px -5px 3px -3px $loaderShadowColor;
     @include prefix(animation, grid-comp-animation-spin 0.8s infinite linear);
   }
 }
 
 .grid-comp-popover {
   display: none;
+  background-color: $popoverBg;
+  color: $fontColor;
+
+  .pop-comp-arrow::before {
+    background-color: $popoverBg;
+  }
 }
 
 .grid-comp-wrapper {

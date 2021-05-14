@@ -1,21 +1,33 @@
-$primaryColor: #ff6502;
-$primaryColorLight: #fff7f3;
-$primaryFontColor: #fff;
-$primaryBg: #fff;
-$secondaryBg: #fafafa;
-$fontColor: rgba(0, 0, 0, 0.8);
-$fontColorHead: rgba(0, 0, 0, 0.6);
-$fontColorLight: rgba(0, 0, 0, 0.6);
-$iconColor: $fontColorHead;
-$borderColor: #f5f5f5;
-$borderColorMedium: #e6e6e6;
-$inputBorderColor: #ecedee;
-$footerBorderColor: #ccc;
-$rowHoverBg: $primaryColorLight;
-$rowHoverColor: $primaryColor;
-$resizingLineColor: $primaryColor;
-$switchBg: #dbdbdb;
-$transparentBg: rgba(0, 0, 0, 0.8);
+$primaryColor: var(--grid-comp-color-primary);
+$primaryFontColor: var(--grid-comp-color-primary-font);
+$primaryBg: var(--grid-comp-color-primary-bg);
+
+$fontColor: var(--grid-comp-color-font);
+$fontColorLight: var(--grid-comp-color-font-light);
+$fontColorHead: var(--grid-comp-color-font-head);
+
+$borderColor: var(--grid-comp-color-border);
+$inputBorderColor: var(--grid-comp-color-border-input);
+$footerBorderColor: var(--grid-comp-color-order-footer);
+
+$activeBg: var(--grid-comp-color-active-bg);
+$loaderShadowColor: var(--grid-comp-color-loader-shadow);
+$inputBg: var(--grid-comp-color-input-bg);
+$popupBg: var(--grid-comp-color-popup-bg);
+$popupHeaderBg: var(--grid-comp-color-popup-header-bg);
+$popoverBg: var(--grid-comp-color-popover-bg);
+$switchBg: var(--grid-comp-color-switch-bg);
+$switchCircle: var(--grid-comp-color-switch-circle);
+$tooltipBg: var(--grid-comp-color-tooltip-bg);
+$tooltipFontColor: var(--grid-comp-color-tooltip-font);
+$rowsLoaderBg: var(--grid-comp-color-rows-loader-bg);
+$aTagColor: var(--grid-comp-color-a-tag);
+$iconColor: var(--grid-comp-color-icon);
+$rowHoverBg: var(--grid-comp-color-row-hover-bg);
+$rowHoverColor: var(--grid-comp-color-row-hover-font);
+$resizingLineColor: var(--grid-comp-color-resizing-line);
+$filterTagBg: var(--grid-comp-color-filter-tag-bg);
+$filterTagBorderColor: var(--grid-comp-color-filter-tag-border);
 
 $fontFamily: inherit;
 $fontSize: 14px;
@@ -44,13 +56,13 @@ $minZIndex: 1;
 
 $stickyColRightShadowBg: linear-gradient(to left, $primaryBg, transparent);
 
-$boxShadow1: 0 -1px 7px 0 rgba(0, 0, 0, 0.07);
-$boxShadow2: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-$boxShadow3: 0 -4px 8px 0 rgba(0, 0, 0, 0.2);
-$boxShadow4: inset 0px 11px 8px -10px rgba(0, 0, 0, 0.16);
-$boxShadow5: inset 0px -11px 7px -12px rgba(0, 0, 0, 0.16);
-$boxShadow6: 2px 2px 8px rgba(0, 0, 0, 0.22);
-$boxShadow7: 5px 0px 7px 0 rgba(0, 0, 0, 0.07);
+$boxShadow1: 0 -1px 7px 0 rgba(var(--grid-comp-color-shadow), 0.07);
+$boxShadow2: 0 4px 8px 0 rgba(var(--grid-comp-color-shadow), 0.2);
+$boxShadow3: 0 -4px 8px 0 rgba(var(--grid-comp-color-shadow), 0.2);
+$boxShadow4: inset 0px 11px 8px -10px rgba(var(--grid-comp-color-shadow), 0.16);
+$boxShadow5: inset 0px -11px 7px -12px rgba(var(--grid-comp-color-shadow), 0.16);
+$boxShadow6: 2px 2px 8px rgba(var(--grid-comp-color-shadow), 0.22);
+$boxShadow7: 5px 0px 7px 0 rgba(var(--grid-comp-color-shadow), 0.07);
 
 $dropdownArrowWidth: 30px;
 $dropdownArrowSize: 8px;
