@@ -49,6 +49,8 @@ class SampleGrid extends GridComponent {
       // perPageOptions: [25, 50, 100, 200],
       showFilters: true,
       showSettings: true,
+      // theme: 'dArk',
+      // language: 'Tamil',
     };
 
     super(options);

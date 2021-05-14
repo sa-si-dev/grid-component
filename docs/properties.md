@@ -19,6 +19,8 @@
 | showFilters | Boolean | false | Show filters button to open filters |
 | showSettings | Boolean | false | Show settings button to customize columns |
 | showSerialNumberCol | Boolean | false | Show serial number column |
+| theme | String | light | Default available themes are light and dark. But you could define custom themes and use here. ([more details](theming.md)) |
+| language | String | default | Language name to get i18n text ([more details](internationalization.md)) |
 | tooltipFontSize | String | 14px | Font size for tooltip |
 | tooltipAlignment | String | center | CSS Text alignment for tooltip |
 | tooltipEnterDelay | String | 300 | Delay time before showing tooltip (in milliseconds) |

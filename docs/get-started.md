@@ -18,6 +18,8 @@ Every project has its own way of data handling and business logic. Considering t
 * Hide columns
 * Sticky table header
 * Sticky columns
+* Theming
+* Internationalization
 
 <script>
   initPageGetStarted();

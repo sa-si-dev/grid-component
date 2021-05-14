@@ -38,6 +38,15 @@ class SampleGrid extends GridComponent {
 
     super(Object.assign(options));
   }
+
+  /** custom column render metod. it needs to declared in column details (columns[].renderer) to use it */
+  rendererEmailCol(colData, rowData) {
+    let email = rowData[colData.key];
+    let textTooltip = this.getTooltipAttrText(email, true);
+    let html = `<a class="grid-comp-col-text" ${textTooltip} href="#/demo?email=${email}">${email}</a>`;
+
+    return html;
+  }
 }
 
 /** initialize grid */

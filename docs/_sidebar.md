@@ -4,6 +4,8 @@
 * [Setup](/setup.md)
 * [API Integration](api-integration.md)
 * [Properties](properties.md)
+* [Theming](/theming.md)
+* [Internationalization](/internationalization.md)
 * [Setup in ES5](/setup-es5.md)
 * [Q&A](https://github.com/{{repo}}/discussions/categories/q-a)
 * [Changelog](https://github.com/{{repo}}/releases)

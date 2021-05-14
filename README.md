@@ -17,6 +17,8 @@
 * Hide columns
 * Sticky table header
 * Sticky columns
+* Theming
+* Internationalization
 
 ## Commands
 
