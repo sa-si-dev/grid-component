@@ -1,4 +1,4 @@
-.grid-comp-wrapper {
+:root {
   --grid-comp-color-primary: #ff6400;
   --grid-comp-color-primary-font: #fff;
   --grid-comp-color-primary-bg: #fff;
@@ -9,6 +9,7 @@
 
   --grid-comp-color-border: #f5f5f5;
   --grid-comp-color-border-input: #ecedee;
+  --grid-comp-color-border-footer: #ccc;
 
   --grid-comp-color-shadow: 0, 0, 0;
   --grid-comp-color-active-bg: #fff7f3;
@@ -18,8 +19,8 @@
   --grid-comp-color-popup-bg: rgba(0, 0, 0, 0.8);
   --grid-comp-color-popup-header-bg: #fafafa;
   --grid-comp-color-popover-bg: var(--grid-comp-color-primary-bg);
+  --grid-comp-color-custom-input-bg: #fff;
   --grid-comp-color-switch-bg: #dbdbdb;
-  --grid-comp-color-switch-circle: #fff;
   --grid-comp-color-a-tag: var(--grid-comp-color-primary);
   --grid-comp-color-icon: var(--grid-comp-color-font-head);
   --grid-comp-color-row-hover-bg: var(--grid-comp-color-active-bg);
@@ -27,6 +28,9 @@
   --grid-comp-color-resizing-line: var(--grid-comp-color-primary);
   --grid-comp-color-filter-tag-bg: transparent;
   --grid-comp-color-filter-tag-border: #e6e6e6;
+
+  --grid-comp-color-tooltip-bg: #212121;
+  --grid-comp-color-tooltip-font: #fff;
 }
 
 .grid-comp-theme-dark {
@@ -47,19 +51,11 @@
   --grid-comp-color-popup-header-bg: #232324;
   --grid-comp-color-popover-bg: var(--grid-comp-color-input-bg);
   --grid-comp-color-switch-bg: #606060;
+  --grid-comp-color-icon: rgb(152, 152, 152);
   --grid-comp-color-row-hover-bg: #282828;
   --grid-comp-color-filter-tag-bg: var(--grid-comp-color-input-bg);
   --grid-comp-color-filter-tag-border: var(--grid-comp-color-input-bg);
-}
 
-/* tooltip - start */
-.grid-comp-tooltip {
-  --grid-comp-color-tooltip-bg: #212121;
-  --grid-comp-color-tooltip-font: #fff;
-}
-
-.grid-comp-tooltip.grid-comp-theme-dark {
   --grid-comp-color-tooltip-bg: #3e3e3e;
   --grid-comp-color-tooltip-font: rgb(200, 200, 200);
 }
-/* tooltip - end */

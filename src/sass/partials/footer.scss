@@ -1,9 +1,9 @@
 .grid-comp-footer {
   position: relative;
   height: $footerHeight;
-  background: $primaryBg;
+  background-color: $primaryBg;
   @include prefix(box-shadow, $boxShadow1);
-  z-index: $minZIndex + 2;
+  z-index: $zIndexFooter;
   padding: 0 $colPaddingHorizontal;
 }
 

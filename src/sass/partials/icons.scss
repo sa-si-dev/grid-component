@@ -17,11 +17,6 @@
   cursor: pointer;
 }
 
-.grid-comp-icon-col-sort,
-.grid-comp-icon-col-sort-active {
-  font-size: 14px;
-}
-
 .grid-comp-icon-col-sort-active.desc {
   @include prefix(transform, rotate(180deg));
 }

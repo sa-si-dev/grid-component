@@ -45,7 +45,7 @@
 
   .grid-comp-col-sticky {
     @include position-sticky-left;
-    z-index: $minZIndex + 1;
+    z-index: $zIndexStickeyCol;
   }
 }
 
@@ -59,7 +59,7 @@
   margin-top: -#{$resizeButtonSize / 2};
   opacity: 0;
   cursor: col-resize;
-  z-index: $minZIndex + 1;
+  z-index: $zIndexResizeButton;
 }
 
 .grid-comp-table-wrapper {
@@ -105,8 +105,8 @@
   right: 0;
   bottom: 0;
   width: 40px;
-  z-index: $minZIndex + 6;
-  background: $stickyColRightShadowBg;
+  z-index: $zIndexRightColShadow;
+  background-color: $stickyColRightShadowBg;
   pointer-events: none;
 }
 
@@ -146,7 +146,7 @@
     font-weight: $fontWeight;
     color: $fontColorHead;
     text-transform: uppercase;
-    z-index: $minZIndex;
+    z-index: $zIndexHeadCol;
 
     &:hover {
       .grid-comp-col-resize-button {
@@ -160,7 +160,7 @@
   }
 
   .grid-comp-col-sticky {
-    z-index: $minZIndex + 2;
+    z-index: $zIndexHeadStickeyCol;
   }
 }
 
@@ -187,7 +187,7 @@
   left: 0;
   bottom: 0;
   border-left: 1px dashed $resizingLineColor;
-  z-index: $minZIndex + 6;
+  z-index: $zIndexResizingLine;
   pointer-events: none;
 }
 
@@ -217,7 +217,7 @@
   width: 100%;
   height: calc(100% - #{$theadHeight + 2px});
   background-color: $rowsLoaderBg;
-  z-index: $minZIndex + 4;
+  z-index: $zIndexRowsLoader;
 
   &::before {
     content: '';

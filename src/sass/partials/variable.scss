@@ -8,7 +8,7 @@ $fontColorHead: var(--grid-comp-color-font-head);
 
 $borderColor: var(--grid-comp-color-border);
 $inputBorderColor: var(--grid-comp-color-border-input);
-$footerBorderColor: var(--grid-comp-color-order-footer);
+$footerBorderColor: var(--grid-comp-color-border-footer);
 
 $activeBg: var(--grid-comp-color-active-bg);
 $loaderShadowColor: var(--grid-comp-color-loader-shadow);
@@ -17,7 +17,7 @@ $popupBg: var(--grid-comp-color-popup-bg);
 $popupHeaderBg: var(--grid-comp-color-popup-header-bg);
 $popoverBg: var(--grid-comp-color-popover-bg);
 $switchBg: var(--grid-comp-color-switch-bg);
-$switchCircle: var(--grid-comp-color-switch-circle);
+$customInputBg: var(--grid-comp-color-custom-input-bg);
 $tooltipBg: var(--grid-comp-color-tooltip-bg);
 $tooltipFontColor: var(--grid-comp-color-tooltip-font);
 $rowsLoaderBg: var(--grid-comp-color-rows-loader-bg);
@@ -37,6 +37,7 @@ $fontSizeLarge: 18px;
 $fontWeight: 400;
 $fontWeightSemiBold: 500;
 $fontSizeHead: 13px;
+
 $theadHeight: 40px;
 $trHeight: 45px;
 $headerHeight: 60px;
@@ -52,7 +53,6 @@ $iconSizeSmall: 14px;
 $iconSizeMedium: 18px;
 $resizeButtonSize: $iconSize;
 $headerIconButtonSize: 36px;
-$minZIndex: 1;
 
 $stickyColRightShadowBg: linear-gradient(to left, $primaryBg, transparent);
 
@@ -71,10 +71,15 @@ $inputWidth: 200px;
 $inputHeight: 36px;
 $inputHeightSmall: 34px;
 $inputIconWidth: $iconSizeSmall + 8px;
+$customInputSize: 16px;
 $switchWidth: 28px;
 $switchHeight: $switchWidth / 2;
 
+$settingsPopoverPadding: 20px;
 $settingsPopoverFooterHeight: 50px;
+$selectableColWidth: 20px;
+$selectedRowsClearButtonWidth: $colPaddingHorizontal;
+$settingsColumnItemOrderButtonWidth: 20px;
 
 $filtersBoxHeaderHeight: 50px;
 $filtersBoxFooterHeight: 60px;
@@ -88,3 +93,16 @@ $transitionDuration: 250ms;
 
 $accordionHeight: 40px;
 $accordionPadding: $filtersBoxPadding;
+
+$minZIndex: 1;
+$zIndexHeadCol: $minZIndex;
+$zIndexStickeyCol: $zIndexHeadCol + 1;
+$zIndexHeadStickeyCol: $zIndexStickeyCol + 1;
+$zIndexSelectedRowsActionsBox: $zIndexHeadStickeyCol + 1;
+$zIndexResizeButton: $minZIndex + 1;
+$zIndexFooter: $minZIndex + 2;
+$zIndexFiltersTags: $minZIndex + 4;
+$zIndexRowsLoader: $minZIndex + 4;
+$zIndexFiltersBox: $minZIndex + 6;
+$zIndexRightColShadow: $minZIndex + 6;
+$zIndexResizingLine: $minZIndex + 6;

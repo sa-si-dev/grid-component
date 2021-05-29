@@ -1,4 +1,8 @@
 .grid-comp-wrapper {
+  .vscomp-ele {
+    background-color: transparent;
+  }
+
   .vscomp-wrapper {
     font-family: inherit;
     font-size: inherit;
@@ -22,7 +26,7 @@
 
   .vscomp-wrapper {
     .checkbox-icon::after {
-      border: 1px solid $primaryColor;
+      border-color: $primaryColor;
     }
 
     &.multiple {
@@ -39,6 +43,12 @@
       .vscomp-toggle-button {
         border: none;
         box-shadow: none !important;
+      }
+    }
+
+    &.transparent {
+      .vscomp-toggle-button {
+        background-color: transparent;
       }
     }
 

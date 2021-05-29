@@ -61,47 +61,139 @@
     padding: 0 8px;
   }
 
+  &.transparent .grid-comp-form-ele {
+    background-color: transparent;
+  }
+
   .grid-comp-form-ele:focus {
     border-color: $primaryColor;
   }
 }
 
-.grid-comp-switch {
+.grid-comp-custom-input-container {
   display: inline-flex;
+  align-items: center;
+  cursor: pointer;
 
   input {
     position: absolute;
-    width: 0;
-    height: 0;
+    width: 1px;
+    height: 1px;
     opacity: 0;
   }
 
-  label {
+  .grid-comp-custom-input-button {
     display: inline-flex;
     position: relative;
+
+    &::after {
+      content: '';
+      pointer-events: none;
+    }
+  }
+
+  .grid-comp-custom-input-text {
+    display: inline-flex;
+    margin-left: 4px;
+  }
+
+  input:checked + .grid-comp-custom-input-button {
+    background-color: $primaryColor;
+  }
+
+  input:disabled + .grid-comp-custom-input-button {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.grid-comp-checkbox-container,
+.grid-comp-radio-container {
+  .grid-comp-custom-input-button {
+    width: $customInputSize;
+    height: $customInputSize;
+    background-color: transparent;
+    border: 2px solid $primaryColor;
+    @include prefix(transition-duration, 0.2s);
+
+    &::after {
+      display: flex;
+      opacity: 0;
+    }
+  }
+
+  input:checked + .grid-comp-custom-input-button {
+    &::after {
+      opacity: 1;
+    }
+  }
+}
+
+.grid-comp-checkbox-container {
+  .grid-comp-custom-input-button {
+    border-radius: 2px;
+
+    &::after {
+      width: 80%;
+      height: 45%;
+      border: 2px solid $customInputBg;
+      border-top-color: transparent;
+      border-right-color: transparent;
+      @include prefix(transform, rotate(-45deg) translate(0, 2px));
+    }
+  }
+
+  input.partial:not(:checked) {
+    & + .grid-comp-custom-input-button {
+      background-color: $primaryColor;
+
+      &::after {
+        opacity: 1;
+        border: none;
+        height: 2px;
+        background-color: $customInputBg;
+        @include prefix(transform, rotate(0) translate(1px, 5px));
+      }
+    }
+  }
+}
+
+.grid-comp-radio-container {
+  .grid-comp-custom-input-button {
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+
+    &::after {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: $customInputBg;
+    }
+  }
+}
+
+.grid-comp-switch-container {
+  .grid-comp-custom-input-button {
     width: $switchWidth;
     height: $switchHeight;
     background-color: $switchBg;
     border-radius: 10px;
-    cursor: pointer;
     @include prefix(transition-duration, 0.2s);
 
     &::after {
-      content: '';
       position: absolute;
       top: 2px;
       left: 2px;
       width: #{$switchHeight - 4px};
       height: #{$switchHeight - 4px};
-      background-color: $switchCircle;
+      background-color: $customInputBg;
       border-radius: 50%;
       @include prefix(transition-duration, 0.2s);
     }
   }
 
-  input:checked + label {
-    background-color: $primaryColor;
-
+  input:checked + .grid-comp-custom-input-button {
     &::after {
       left: #{$switchWidth - $switchHeight + 2px};
     }
@@ -167,10 +259,6 @@
   height: #{$inputHeight - 2px};
   background-color: $inputBg;
   color: $primaryColor;
-
-  .grid-comp-icon {
-    font-size: $iconSizeSmall;
-  }
 }
 
 .grid-comp-input-container {

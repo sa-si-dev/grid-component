@@ -100,8 +100,16 @@ export class DomUtils {
     $ele.style[name] = value;
   }
 
-  static setInputValue($ele, value, silent) {
+  static setInputValue($ele, value, params = {}) {
     if (!$ele) {
+      return;
+    }
+
+    let silent = params.silent;
+    let skipIfSameValue = params.skipIfSameValue;
+
+    /** if old and new values are same skip value change */
+    if (skipIfSameValue && value === DomUtils.getInputValue($ele)) {
       return;
     }
 
@@ -111,10 +119,10 @@ export class DomUtils {
       $ele.checked = value || false;
     } else {
       $ele.value = value;
+    }
 
-      if (!silent) {
-        DomUtils.dispatchEvent($ele, 'change');
-      }
+    if (!silent) {
+      DomUtils.dispatchEvent($ele, 'change');
     }
   }
 
@@ -190,6 +198,14 @@ export class DomUtils {
     });
 
     return result.reverse();
+  }
+
+  static getChildIndex($ele) {
+    if (!$ele || !$ele.parentElement) {
+      return -1;
+    }
+
+    return [...$ele.parentElement.children].indexOf($ele);
   }
 
   /** element methods - start */
@@ -490,6 +506,148 @@ export class DomUtils {
     return isValid;
   }
   /** input filter - end */
+
+  /** sortable component - start */
+  static initSortableComp(data = {}) {
+    let $container = data.$container;
+    $container.sortableComp = {
+      afterSort: data.afterSort,
+    };
+
+    DomUtils.addEvent($container, 'mousedown', DomUtils.onSortableCompContainerMouseDown);
+  }
+
+  static onSortableCompContainerMouseDown(e) {
+    let $ele = e.target;
+
+    if (!$ele.closest('.has-child-action') && $ele.closest('.sortable-comp-item')) {
+      DomUtils.onSortableCompItemMouseDown(e);
+    }
+  }
+
+  static onSortableCompItemMouseDown(e) {
+    let $item = e.target.closest('.sortable-comp-item');
+    let $container = $item.closest('.sortable-comp-container');
+    let $itemClone = $item.cloneNode(true);
+    let sortableComp = $container.sortableComp;
+    let oldIndex = DomUtils.getChildIndex($item);
+    let containerCoords = $container.getBoundingClientRect();
+    let itemCoords = $item.getBoundingClientRect();
+    let shiftY = e.clientY + containerCoords.top - itemCoords.top;
+    let containerScrollHeight = $container.scrollHeight;
+    let containerClientHeight = $container.clientHeight;
+    let itemOffsetHeight = $item.offsetHeight;
+    let maxTranslateTop = containerScrollHeight - itemOffsetHeight;
+    let hasScroll = containerScrollHeight > containerClientHeight;
+    let placeholderHtml = `<div class="sortable-comp-placeholder" style="height: ${itemOffsetHeight}px"></div>`;
+
+    $container.insertAdjacentHTML('beforeend', placeholderHtml);
+    $container.append($itemClone);
+    $itemClone.classList.add('sortable-comp-item-clone');
+    $item.classList.add('sortable-comp-item-active');
+
+    let $placeholder = $container.querySelector('.sortable-comp-placeholder');
+
+    movePlaceholder(e);
+    moveItemClone(e);
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+
+    function movePlaceholder(e) {
+      $itemClone.style.display = 'none';
+      let $mouseOverItem = document.elementFromPoint(e.clientX, e.clientY);
+      $itemClone.style.display = '';
+
+      if (!$mouseOverItem) {
+        return;
+      }
+
+      $mouseOverItem = $mouseOverItem.closest('.sortable-comp-item');
+
+      if (!$mouseOverItem) {
+        return;
+      }
+
+      /** on hovering element which is next to placeholder */
+      if ($mouseOverItem.previousElementSibling === $placeholder) {
+        $mouseOverItem = $mouseOverItem.nextElementSibling;
+      }
+
+      $container.insertBefore($placeholder, $mouseOverItem);
+    }
+
+    function moveItemClone(e) {
+      let top = e.pageY - shiftY + $container.scrollTop;
+
+      /** if reached top */
+      if (top < 0) {
+        top = 0;
+      }
+
+      /** if reached botttom */
+      if (top > maxTranslateTop) {
+        top = maxTranslateTop;
+      }
+
+      $itemClone.style.transform = `translate3d(0, ${top}px, 0)`;
+      $itemClone.dataset.translateTop = top;
+    }
+
+    function moveItem() {
+      if (!$item) {
+        return;
+      }
+
+      $container.insertBefore($item, $placeholder);
+    }
+
+    function scrollContainer() {
+      if (!hasScroll) {
+        return;
+      }
+
+      let containerTop = $container.scrollTop;
+      let containerBottom = containerTop + containerClientHeight;
+      let itemTop = parseFloat($itemClone.dataset.translateTop);
+      let itemBottom = itemTop + itemOffsetHeight;
+      let scrollBy = 3;
+
+      if (itemTop < containerTop) {
+        /** exceeded top edge */
+        $container.scrollBy(0, -scrollBy);
+      } else if (itemBottom > containerBottom) {
+        /** exceeded bottom edge */
+        $container.scrollBy(0, scrollBy);
+      }
+    }
+
+    function onMouseMove(e) {
+      movePlaceholder(e);
+      moveItemClone(e);
+      scrollContainer();
+    }
+
+    function onMouseUp() {
+      let newIndex = DomUtils.getChildIndex($placeholder);
+      let indexDiff = newIndex - oldIndex;
+      let hasItemMoved = indexDiff !== 0 && indexDiff !== 1;
+
+      if (hasItemMoved) {
+        moveItem();
+      }
+
+      $itemClone.remove();
+      $placeholder.remove();
+      $item.classList.remove('sortable-comp-item-active');
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+
+      if (hasItemMoved && typeof sortableComp.afterSort === 'function') {
+        sortableComp.afterSort();
+      }
+    }
+  }
+  /** sortable component - end */
 }
 
 window.GridCompDomUtils = DomUtils;

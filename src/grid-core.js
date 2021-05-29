@@ -20,6 +20,8 @@ export class GridCoreComponent {
    * @property {boolean} [showFilters=false] - Show filters button to open filters
    * @property {boolean} [showSettings=false] - Show settings button to customize columns
    * @property {boolean} [showSerialNumberCol=false] - Show serial number column
+   * @property {boolean} [showSelectableCol=false] - Show checkbox column to select rows
+   * @property {(string[]|object[])} [selectedRowsActions] - List of action buttons to show when rows selected.
    * @property {string} [theme=light] - Default available themes are light and dark. But you could define custom themes and use here.
    * @property {string} [language=default] - Language name to get i18n text
    * @property {string} [tooltipFontSize=14px] - Font size for tooltip
@@ -30,12 +32,13 @@ export class GridCoreComponent {
    * @property {object[]} rows - List of rows details. It would be used to render static rows instead of getting from server.
    *
    * @property {object[]} columns - List of columns details
-   * @property {string} columns[].id - Unique column ID
+   * @property {string} columns[].id - Unique column ID (string without space or special characters)
    * @property {string} columns[].name - Column header text
    * @property {string} columns[].key - Property name to get column value from row details
    * @property {string} [columns[].width] - Width of the column (in px)
    * @property {string} [columns[].align=left] - CSS text align value (left, right, center)
    * @property {function} [columns[].renderer] - Callback method name to render column value
+   * @property {function} [columns[].headRenderer] - Callback method name to render column header
    * @property {boolean} [columns[].sticky=false] - Make the column fixed on scroll horizontally
    * @property {boolean} [columns[].resizable] - Allow to resize width of the column
    * @property {boolean} [columns[].sortable] - Make the column sortable
@@ -71,6 +74,7 @@ export class GridCoreComponent {
       options.ele = $ele;
 
       this.setProps(options);
+      GridCoreComponent.setTheme(this.theme);
       this.render();
       this.addEvents();
     } catch (e) {
@@ -80,7 +84,7 @@ export class GridCoreComponent {
 
   /** render methods - start */
   render() {
-    let html = `<div class="grid-comp-wrapper grid-comp-theme-${this.theme}" data-unique-id="${this.uniqueId}">
+    let html = `<div class="grid-comp-wrapper" data-unique-id="${this.uniqueId}">
         <div class="grid-comp-header grid-comp-hide"></div>
 
         <div class="grid-comp-filters-tags-wrapper">
@@ -104,6 +108,7 @@ export class GridCoreComponent {
         <div class="grid-comp-footer"></div>
         <div class="grid-comp-filters-box-wrapper"></div>
         <div class="grid-comp-settings-popover-container"></div>
+        <div class="grid-comp-selected-rows-action-box-wrapper"></div>
       </div>`;
 
     this.$ele.innerHTML = html;
@@ -118,6 +123,7 @@ export class GridCoreComponent {
     this.$resizingLine = this.$wrapper.querySelector('.grid-comp-col-resizing-line');
     this.$filtersBoxWrapper = this.$wrapper.querySelector('.grid-comp-filters-box-wrapper');
     this.$settingsPopoverContainer = this.$wrapper.querySelector('.grid-comp-settings-popover-container');
+    this.$selectedRowsActionsBoxWrapper = this.$wrapper.querySelector('.grid-comp-selected-rows-action-box-wrapper');
 
     this.afterRenderWrapper();
   }
@@ -133,6 +139,7 @@ export class GridCoreComponent {
     let filtersButton = '';
     let exportButton = '';
     let settingsButton = '';
+    let iconSizeMedium = config.iconSizeMedium;
 
     if (this.title) {
       title = `<span class="grid-comp-header-title">${this.title}</span>`;
@@ -140,7 +147,7 @@ export class GridCoreComponent {
 
     if (this.showFilters) {
       filtersButton = `<span class="grid-comp-icon-button grid-comp-filters-button first-child" ${getTooltipAttrText(i18n('filters'))}>
-          ${icon('filter')}
+          ${icon('filter', { size: iconSizeMedium })}
         </span>`;
     }
 
@@ -150,7 +157,7 @@ export class GridCoreComponent {
 
     if (this.showSettings) {
       settingsButton = `<span class="grid-comp-icon-button grid-comp-settings-button" ${getTooltipAttrText(i18n('customize'))}>
-          ${icon('settings')}
+          ${icon('settings', { size: iconSizeMedium })}
         </span>`;
     }
 
@@ -167,8 +174,6 @@ export class GridCoreComponent {
     `;
 
     this.$header.innerHTML = html;
-    this.$filtersButton = this.$wrapper.querySelector('.grid-comp-filters-button');
-    this.$exportButtons = this.$wrapper.querySelectorAll('.grid-comp-export-button');
     this.$settingsButton = this.$wrapper.querySelector('.grid-comp-settings-button');
 
     this.show(this.$header);
@@ -176,7 +181,7 @@ export class GridCoreComponent {
 
   renderExportButton() {
     let html = `<span class="grid-comp-icon-button grid-comp-export-button" ${this.getTooltipAttrText(this.i18n('export'))}>
-        ${icon('download')}
+        ${icon('download', { size: config.iconSizeMedium })}
       </span>`;
 
     return html;
@@ -223,7 +228,6 @@ export class GridCoreComponent {
     this.$footer.innerHTML = html;
     this.$footerRight = this.$wrapper.querySelector('.grid-comp-footer-right');
     this.$grandTotalContainer = this.$wrapper.querySelector('.grid-comp-grand-total-container');
-    this.$grandTotalButton = this.$wrapper.querySelector('.grid-comp-grand-total-button');
     this.$grandTotalText = this.$wrapper.querySelector('.grid-comp-grand-total-text');
     this.$perPageContainer = this.$wrapper.querySelector('.grid-comp-per-page-container');
     this.$rowsCountContainer = this.$wrapper.querySelector('.grid-comp-rows-count-container');
@@ -292,20 +296,26 @@ export class GridCoreComponent {
 
     if (sortable) {
       let sortTooltip = this.getTooltipAttrText('');
-      sortIcon = `<span class="grid-comp-icon-button grid-comp-col-sort-icon" ${sortTooltip}>${icon('col-sort')}</span>`;
+      sortIcon = `<span class="grid-comp-icon-button grid-comp-col-sort-icon" ${sortTooltip}>${icon('col-sort', { size: config.iconSizeSmall })}</span>`;
       textContainerClassNames += ' grid-comp-col-sort-button';
     }
 
-    let colName = colData.name;
+    let colName = colData.name || '';
     let textTooltip = this.getTooltipAttrText(colName, true);
+    let colHeadText;
+
+    if (colData.headRenderer && typeof this[colData.headRenderer] === 'function') {
+      colHeadText = this[colData.headRenderer](colData);
+    } else {
+      colHeadText = `<span class="grid-comp-col-text" ${textTooltip}>
+          ${colName}
+        </span>`;
+    }
 
     let html = `<th class="${classNames}" ${DomUtils.getAttributesText(colAttrData)}>
       <div class="grid-comp-col-content">
         <div class="${textContainerClassNames}" ${DomUtils.getStyleText(colStyle)}>
-          <span class="grid-comp-col-text" ${textTooltip}>
-            ${colName}
-          </span>
-
+          ${colHeadText}
           ${sortIcon}
         </div>
         ${rightSection}
@@ -318,17 +328,14 @@ export class GridCoreComponent {
 
   renderRows() {
     let html = '';
-    let rows = this.visibleRows;
-    let rowsRange = this.getRowsRange();
-    let visibleRowIndex = rowsRange.start;
 
-    rows.forEach((d) => {
-      d.sNo = visibleRowIndex++;
+    this.visibleRows.forEach((d) => {
       html += this.renderRow(d);
     });
 
     this.$tbody.innerHTML = html;
     this.$columns = this.$wrapper.querySelectorAll('.grid-comp-col:not(.grid-comp-observer-col)');
+    this.$selectableColCheckbox = this.$wrapper.querySelectorAll('.grid-comp-selectable-col-checkbox');
 
     this.afterRenderRows();
   }
@@ -341,7 +348,7 @@ export class GridCoreComponent {
     });
 
     html += '<td class="grid-comp-col grid-comp-observer-col"></td>';
-    html = `<tr class="grid-comp-row">${html}</tr>`;
+    html = `<tr class="grid-comp-row" data-row-index="${rowData.rowIndex}">${html}</tr>`;
 
     return html;
   }
@@ -396,6 +403,26 @@ export class GridCoreComponent {
     return html;
   }
 
+  renderSelectableCol(colData, rowData) {
+    let value = rowData[colData.key];
+    let textTooltip = '';
+    let data = {
+      id: `grid-comp-selectable-col-checkbox-${this.uniqueId}-${value}`,
+      inputClass: 'grid-comp-selectable-col-checkbox',
+      checked: rowData.isRowSelected,
+      disabled: !rowData.isRowSelectable,
+    };
+
+    if (rowData.isRowSelectableMessage) {
+      textTooltip = this.getTooltipAttrText(rowData.isRowSelectableMessage);
+    }
+
+    let html = this.renderCheckbox(data);
+    html = `<span class="grid-comp-selectable-col-checkbox-container" ${textTooltip}>${html}</span>`;
+
+    return html;
+  }
+
   renderSortIcons() {
     let sortColIndex = this.sortColIndex;
     let orderClassName;
@@ -421,7 +448,7 @@ export class GridCoreComponent {
         iconName = 'col-sort';
       }
 
-      $ele.innerHTML = icon(iconName, orderClassName);
+      $ele.innerHTML = icon(iconName, { className: orderClassName, size: config.iconSizeSmall });
       DomUtils.setData($ele, 'tooltip', _orderTooltip);
     });
   }
@@ -433,15 +460,13 @@ export class GridCoreComponent {
       options: this.getPerPageOptions(),
       hideClearButton: true,
       autoSelectFirstOption: true,
-      additionalClasses: 'no-border',
+      additionalClasses: 'no-border transparent',
       silentInitialValueSet: true,
     };
 
     this.renderDropdown(data);
 
     this.$perPageDropdown = this.$wrapper.querySelector('.grid-comp-per-page-dropdown');
-
-    this.afterRenderPerPageDropdown();
   }
 
   renderGrandTotal() {
@@ -467,13 +492,7 @@ export class GridCoreComponent {
   }
 
   renderSettingsPopover() {
-    let columns = this.columns;
-    let uniqueId = this.uniqueId;
-    let getTooltipAttrText = this.getTooltipAttrText.bind(this);
-    let renderSwitch = this.renderSwitch.bind(this);
     let i18n = this.i18n.bind(this);
-    let isSettingsColumnItemVisible = this.isSettingsColumnItemVisible.bind(this);
-    let columnsList = '';
     let searchInputData = {
       class: 'grid-comp-settings-popover-search-container',
       inputClass: 'grid-comp-search-comp-input grid-comp-settings-popover-search-input',
@@ -483,39 +502,13 @@ export class GridCoreComponent {
       hasClearButton: true,
     };
 
-    columns.forEach((d, i) => {
-      if (!isSettingsColumnItemVisible(d)) {
-        return false;
-      }
-
-      let name = d.name;
-      let itemClass = 'grid-comp-settings-column-item grid-comp-search-comp-item';
-      let switchData = {
-        id: `grid-comp-settings-column-item-switch-${uniqueId}-${i}`,
-        class: 'grid-comp-settings-column-item-switch',
-        value: name,
-      };
-
-      if (!d.hidden) {
-        switchData.checked = true;
-      }
-
-      columnsList += `<div class="${itemClass}">
-          <span class="grid-comp-settings-column-item-name" ${getTooltipAttrText(name, true)}>${name}</span>
-          ${renderSwitch(switchData)}
-        </div>`;
-    });
-
     let html = `<div class="grid-comp-popover grid-comp-settings-popover pop-comp-wrapper grid-comp-search-comp-container">
       <div class="grid-comp-settings-popover-header">
         ${this.renderInput(searchInputData)}
       </div>
 
       <div class="grid-comp-settings-popover-body grid-comp-more-shadow-container">
-        <div class="grid-comp-more-shadow-content">
-          <div class="grid-comp-search-comp-no-result">${i18n('no.search.result')}</div>
-          ${columnsList}
-        </div>
+        <div class="grid-comp-more-shadow-content sortable-comp-container"></div>
       </div>
 
       <div class="grid-comp-settings-popover-footer">
@@ -532,12 +525,53 @@ export class GridCoreComponent {
     this.$settingsPopover = this.$wrapper.querySelector('.grid-comp-settings-popover');
     this.$settingsPopoverSearchInput = this.$wrapper.querySelector('.grid-comp-settings-popover-search-input');
     this.$settingsPopoverBody = this.$wrapper.querySelector('.grid-comp-settings-popover-body');
-    this.$settingsPopoverShadowContent = this.$settingsPopoverBody.querySelector('.grid-comp-more-shadow-content');
-    this.$settingsPopoverSwitch = this.$wrapper.querySelectorAll('.grid-comp-settings-column-item-switch');
-    this.$settingsPopoverSave = this.$wrapper.querySelectorAll('.grid-comp-settings-save-button');
-    this.$settingsPopoverCancel = this.$wrapper.querySelectorAll('.grid-comp-settings-cancel-button');
+    this.$settingsPopoverBodyContent = this.$settingsPopoverBody.querySelector('.grid-comp-more-shadow-content');
 
     this.afterRenderSettingsPopover();
+  }
+
+  renderSettingsColumnItems() {
+    let renderSettingsColumnItem = this.renderSettingsColumnItem.bind(this);
+    let html = `<div class="grid-comp-search-comp-no-result">${this.i18n('no.search.result')}</div>`;
+
+    this.columns.forEach((d) => {
+      html += renderSettingsColumnItem(d);
+    });
+
+    this.$settingsPopoverBodyContent.innerHTML = html;
+  }
+
+  renderSettingsColumnItem(d) {
+    if (d.sticky) {
+      return '';
+    }
+
+    let name = d.name;
+    let itemClass = 'grid-comp-settings-column-item grid-comp-search-comp-item sortable-comp-item';
+    let switchHtml = '';
+
+    if (!d.alwaysShow) {
+      let switchData = {
+        id: `grid-comp-settings-column-item-switch-${this.uniqueId}-${d.id}`,
+        inputClass: 'grid-comp-settings-column-item-switch',
+        class: 'has-child-action',
+        value: name,
+      };
+
+      if (!d.hidden) {
+        switchData.checked = true;
+      }
+
+      switchHtml = this.renderSwitch(switchData);
+    }
+
+    let html = `<div class="${itemClass}" data-col-id="${d.id}">
+        <span class="grid-comp-icon-button grid-comp-settings-column-item-order-button">${icon('grip', { size: '12px' })}</span>
+        <span class="grid-comp-settings-column-item-name" ${this.getTooltipAttrText(name, true)}>${name}</span>
+        ${switchHtml}
+      </div>`;
+
+    return html;
   }
 
   renderFiltersBox() {
@@ -565,8 +599,6 @@ export class GridCoreComponent {
 
     this.$filtersBoxWrapper.innerHTML = html;
     this.$filtersBoxFilterSections = this.$wrapper.querySelector('.grid-comp-filter-sections');
-    this.$filtersBoxSubmitButton = this.$wrapper.querySelector('.grid-comp-filters-box-submit-button');
-    this.$filtersBoxCancelButton = this.$wrapper.querySelector('.grid-comp-filters-box-cancel-button');
 
     this.afterRenderFiltersBox();
   }
@@ -615,7 +647,7 @@ export class GridCoreComponent {
           </span>
 
           <span class="grid-comp-icon-button grid-comp-accordion-header-button">
-            ${icon('arrow-down', 'grid-comp-accordion-header-icon')}
+            ${icon('arrow-down', { className: 'grid-comp-accordion-header-icon' })}
           </span>
         </div>
 
@@ -743,7 +775,6 @@ export class GridCoreComponent {
 
     this.$filtersTagsContainer.innerHTML = html;
     this.$filterTagItems = this.$wrapper.querySelectorAll('.grid-comp-filter-tag-item');
-    this.$filtersTagsMoreButton = this.$wrapper.querySelector('.grid-comp-filters-tags-more-button');
     this.hasFiltersTags = filtersValue.length ? true : false;
 
     DomUtils.toggleClass(this.$wrapper, 'has-filters-tags', this.hasFiltersTags);
@@ -797,12 +828,68 @@ export class GridCoreComponent {
           </span>
 
           <span class="grid-comp-icon-button grid-comp-filter-tag-remove-button" ${getTooltipAttrText(i18n('remove'))}>
-            ${icon('times')}
+            ${icon('times', { size: '12px' })}
           </span>
         </span>`;
     });
 
     return html;
+  }
+
+  renderSelectedRowsActionsBox() {
+    let checkboxData = {
+      id: `grid-comp-selectable-col-head-checkbox-${this.uniqueId}`,
+      inputClass: 'grid-comp-selectable-col-head-checkbox',
+      class: 'grid-comp-selectable-col-head-checkbox-cotainer',
+    };
+
+    let html = `
+      <div class="grid-comp-selected-rows-clear-container">
+        <span class="grid-comp-icon-button grid-comp-selected-rows-clear-button" ${this.getTooltipAttrText(this.i18n('clear'))}>
+          ${icon('times', { size: '20px' })}
+        </span>
+      </div>
+      ${this.renderCheckbox(checkboxData)}
+      <div class="grid-comp-selected-rows-action-box-content">
+        <div class="grid-comp-selected-rows-count"></div>
+        <div class="grid-comp-selected-rows-actions-container"></div>
+      </div>
+    `;
+
+    this.$selectedRowsActionsBoxWrapper.innerHTML = html;
+    this.$selectableColHeadCheckbox = this.$wrapper.querySelector('.grid-comp-selectable-col-head-checkbox');
+    this.$selectedRowsCount = this.$wrapper.querySelector('.grid-comp-selected-rows-count');
+    this.$selectedRowsActionsContainer = this.$wrapper.querySelector('.grid-comp-selected-rows-actions-container');
+  }
+
+  renderSelectedRowsActions() {
+    let actions = this.selectedRowsActions;
+
+    if (Utils.isEmpty(actions)) {
+      return;
+    }
+
+    let html = '';
+
+    actions.forEach((action) => {
+      let actionLabel;
+      let actionValue;
+
+      if (typeof action === 'object') {
+        actionLabel = action.label;
+        actionValue = action.value;
+      } else {
+        actionLabel = action;
+        actionValue = action;
+      }
+
+      html += ` <button class="grid-comp-button grid-comp-button-secondary grid-comp-button-small grid-comp-selected-rows-action-button"
+        data-action="${actionValue}">
+          ${actionLabel}
+        </button>`;
+    });
+
+    this.$selectedRowsActionsContainer.innerHTML = html;
   }
   /** render methods - end */
 
@@ -879,25 +966,66 @@ export class GridCoreComponent {
       </div>`;
   }
 
-  renderSwitch(data) {
+  renderCustomInput(data) {
+    let type = data.type;
+    let inputType = type === 'switch' ? 'checkbox' : type;
+    let inputText = '';
+    let containerAttributes = {
+      class: `grid-comp-custom-input-container grid-comp-${type}-container`,
+    };
+
     let inputAttributes = {
-      type: 'checkbox',
-      class: 'grid-comp-form-ele grid-comp-checkbox',
+      type: inputType,
+      class: `grid-comp-form-ele grid-comp-${inputType}`,
       id: data.id,
       name: data.name,
-      checked: data.checked,
     };
 
     if (data.class) {
-      inputAttributes.class += ' ' + data.class;
+      containerAttributes.class += ' ' + data.class;
     }
 
-    let html = `<span class="grid-comp-switch">
+    if (data.inputClass) {
+      inputAttributes.class += ' ' + data.inputClass;
+    }
+
+    if (data.checked) {
+      inputAttributes.checked = true;
+    }
+
+    if (data.disabled) {
+      inputAttributes.disabled = true;
+    }
+
+    if (data.label) {
+      inputText = `<span class="grid-comp-custom-input-text">${data.label}</span>`;
+    }
+
+    let html = `<label for="${data.id}" ${DomUtils.getAttributesText(containerAttributes)}>
         <input ${DomUtils.getAttributesText(inputAttributes)}>
-        <label for="${data.id}"></label>
-      </span>`;
+        <span class="grid-comp-custom-input-button"></span>
+        ${inputText}
+      </label>`;
 
     return html;
+  }
+
+  renderSwitch(data) {
+    data.type = 'switch';
+
+    return this.renderCustomInput(data);
+  }
+
+  renderCheckbox(data) {
+    data.type = 'checkbox';
+
+    return this.renderCustomInput(data);
+  }
+
+  renderRadio(data) {
+    data.type = 'radio';
+
+    return this.renderCustomInput(data);
   }
 
   renderInputNumber(data) {
@@ -946,7 +1074,7 @@ export class GridCoreComponent {
     if (data.iconName) {
       let iconPosition = data.iconPosition || 'right';
       containerAttributes.class += ` has-icon icon-position-${iconPosition}`;
-      iconHtml = `<span class="grid-comp-input-icon">${icon(data.iconName)}</span>`;
+      iconHtml = `<span class="grid-comp-input-icon">${icon(data.iconName, { size: config.iconSizeSmall })}</span>`;
     }
 
     if (data.hasClearButton) {
@@ -976,22 +1104,9 @@ export class GridCoreComponent {
     this.addEvent(this.$wrapper, 'mousedown touchstart', 'onWrapperMouseDown');
     this.addEvent(this.$wrapper, 'mousemove touchmove', 'onWrapperMouseMove');
     this.addEvent(this.$wrapper, 'click', 'onWrapperClick');
-
-    this.addEvent(this.$pageNavFirst, 'click', 'onPageNavFirstClick');
-    this.addEvent(this.$pageNavLast, 'click', 'onPageNavLastClick');
-    this.addEvent(this.$pageNavPrev, 'click', 'onPageNavPrevClick');
-    this.addEvent(this.$pageNavNext, 'click', 'onPageNavNextClick');
+    this.addEvent(this.$wrapper, 'change', 'onWrapperChange');
 
     this.addEvent(this.$tableContainer, 'scroll', 'onTableContainerScroll');
-
-    if (this.showFilters) {
-      this.addEvent(this.$filtersButton, 'click', 'onFiltersButtonClick');
-      this.addEvent(this.$filtersBoxCancelButton, 'click', 'onFiltersBoxCancelButtonClick');
-    }
-
-    if (this.exportable) {
-      this.addEvent(this.$exportButtons, 'click', 'onExportButtonClick');
-    }
   }
 
   addEvent($ele, events, method) {
@@ -1012,6 +1127,17 @@ export class GridCoreComponent {
 
       DomUtils.addEvent($ele, event, callback);
     });
+  }
+
+  onChildEvent(e, methodsMapping) {
+    let $ele = e.target;
+
+    for (let className in methodsMapping) {
+      if ($ele.closest('.' + className)) {
+        this[methodsMapping[className]](e);
+        break;
+      }
+    }
   }
 
   onDocumentClick(e) {
@@ -1050,9 +1176,9 @@ export class GridCoreComponent {
   }
 
   onWrapperMouseDown(e) {
-    let target = e.target;
+    let $ele = e.target;
 
-    if (target.closest('.grid-comp-col-resize-button')) {
+    if ($ele.closest('.grid-comp-col-resize-button')) {
       this.onColResizeStart(e);
     }
   }
@@ -1064,11 +1190,11 @@ export class GridCoreComponent {
   }
 
   onWrapperClick(e) {
-    let $ele = e.target;
+    this.onChildEvent(e, config.wrapperClickMethodsMapping);
+  }
 
-    if ($ele.closest('.grid-comp-col-sort-button')) {
-      this.onColSortClick(e);
-    }
+  onWrapperChange(e) {
+    this.onChildEvent(e, config.wrapperChangeMethodsMapping);
   }
 
   onColResizeStart(e) {
@@ -1140,18 +1266,20 @@ export class GridCoreComponent {
     this.getGrandTotal();
   }
 
-  onSettingsPopoverSwitchChange() {
+  onSettingsPopoverValueChange() {
     DomUtils.addClass(this.$settingsPopover, 'has-value-changed');
   }
 
+  onSettingsPopoverSwitchChange() {
+    this.onSettingsPopoverValueChange();
+  }
+
   onSettingsPopoverSaveClick() {
-    this.setColumnsHiddenProp();
-    this.$settingsButton.hide();
-    DomUtils.removeClass(this.$settingsPopover, 'has-value-changed');
+    this.saveColumnsSettings();
   }
 
   onSettingsPopoverCancelClick() {
-    this.setSettingsPopoverCheckboxValue();
+    this.renderSettingsColumnItems();
     this.$settingsButton.hide();
     DomUtils.removeClass(this.$settingsPopover, 'has-value-changed');
   }
@@ -1166,6 +1294,32 @@ export class GridCoreComponent {
 
   onTableContainerScroll() {
     this.setTableColumnShadow();
+  }
+
+  onSelectableColCheckboxChange(e) {
+    let $ele = e.target;
+    let $row = $ele.closest('.grid-comp-row');
+    let isChecked = DomUtils.getInputValue($ele);
+    let rowIndex = DomUtils.getData($row, 'rowIndex');
+
+    DomUtils.toggleClass($row, 'selected', isChecked);
+    this.setRowProp(rowIndex, 'isRowSelected', isChecked);
+    this.toggleSelectedRowsActionsBox(null, { silent: true });
+  }
+
+  onSelectableColHeadCheckboxChange(e) {
+    this.toggleSelectAllRows(DomUtils.getInputValue(e.target));
+  }
+
+  onSelectedRowsClearClick() {
+    this.toggleSelectAllRows(false);
+  }
+
+  onSelectedRowsActionClick(e) {
+    let action = DomUtils.getData(e.target, 'action');
+    let selectedRows = this.getSelectedRows();
+
+    alert(`Clicked action "${action}" for ${selectedRows.length} rows`);
   }
   /** dom event methods - end */
 
@@ -1206,6 +1360,11 @@ export class GridCoreComponent {
       this.renderSettingsPopover();
     }
 
+    if (this.showSelectableCol) {
+      this.renderSelectedRowsActionsBox();
+      this.renderSelectedRowsActions();
+    }
+
     if (this.rowsFromServer) {
       this.getRows();
     } else {
@@ -1223,7 +1382,6 @@ export class GridCoreComponent {
   }
 
   afterRenderFooter() {
-    this.addEvent(this.$grandTotalButton, 'click', 'onGrandTotalButtonClick');
     this.renderPerPageDropdown();
   }
 
@@ -1238,18 +1396,17 @@ export class GridCoreComponent {
     DomUtils.toggleClass(this.$wrapper, 'has-no-rows', this.rows.length === 0);
   }
 
-  afterRenderPerPageDropdown() {
-    this.addEvent(this.$perPageDropdown, 'change', 'onPerPageDropdownChange');
-  }
-
   afterRenderSettingsPopover() {
+    this.renderSettingsColumnItems();
     this.initSettingsPopover();
-    this.addEvent(this.$settingsPopoverSwitch, 'change', 'onSettingsPopoverSwitchChange');
-    this.addEvent(this.$settingsPopoverSave, 'click', 'onSettingsPopoverSaveClick');
-    this.addEvent(this.$settingsPopoverCancel, 'click', 'onSettingsPopoverCancelClick');
-    DomUtils.initMoreShadowScroll(this.$settingsPopoverShadowContent);
+    DomUtils.initMoreShadowScroll(this.$settingsPopoverBodyContent);
     DomUtils.initSearchComp(this.$settingsPopover);
     DomUtils.initInputClearComp(this.$settingsPopover);
+
+    DomUtils.initSortableComp({
+      $container: this.$settingsPopover.querySelector('.sortable-comp-container'),
+      afterSort: this.afterSortSettingsColumns.bind(this),
+    });
   }
 
   afterRenderFiltersBox() {
@@ -1269,7 +1426,6 @@ export class GridCoreComponent {
   afterRenderFiltersTags() {
     this.setBodyHeight();
     this.toggleFiltersTagsMoreItems(false);
-    this.addEvent(this.$filtersTagsMoreButton, 'click', 'onFiltersTagsMoreButtonClick');
   }
 
   afterGetRows(rows, pageDetails) {
@@ -1323,6 +1479,10 @@ export class GridCoreComponent {
     }
 
     this.setVisibleRows();
+
+    if (this.showSelectableCol) {
+      this.toggleSelectedRowsActionsBox(false, { silent: true });
+    }
   }
 
   afterSetSortValue() {
@@ -1344,15 +1504,17 @@ export class GridCoreComponent {
     this.togglePageNavButtons();
   }
 
-  afterSetColumnsHiddenProp() {
-    this.setVisibleColumns();
-    this.renderRows();
-    this.storageSetColumnSettings();
-  }
-
   afterSetFiltersValue() {
     this.renderFiltersTags();
     this.filterRows();
+  }
+
+  afterSaveColumnsSettings() {
+    this.setVisibleColumns();
+    this.renderRows();
+    this.storageSetColumnSettings();
+    this.$settingsButton.hide();
+    DomUtils.removeClass(this.$settingsPopover, 'has-value-changed');
   }
 
   afterSortRowsSync(sortedRows) {
@@ -1363,7 +1525,7 @@ export class GridCoreComponent {
 
   afterShowSettingsPopover() {
     DomUtils.focusEle(this.$settingsPopoverSearchInput);
-    DomUtils.toggleMoreShadow(this.$settingsPopoverShadowContent);
+    DomUtils.toggleMoreShadow(this.$settingsPopoverBodyContent);
   }
 
   afterShowFiltersBox() {
@@ -1401,6 +1563,10 @@ export class GridCoreComponent {
     this.setFiltersValue();
     this.hideFiltersBox();
   }
+
+  afterSortSettingsColumns() {
+    this.onSettingsPopoverValueChange();
+  }
   /** after event methods - end */
 
   /** set methods - start */
@@ -1419,6 +1585,7 @@ export class GridCoreComponent {
     this.perPageOptions = options.perPageOptions;
     this.uniqueKey = options.uniqueKey;
     this.apiUrl = options.apiUrl;
+    this.selectedRowsActions = options.selectedRowsActions;
     this.theme = options.theme.toLowerCase();
     this.language = options.language.toLowerCase();
     this.scrollableContent = convertToBoolean(options.scrollableContent);
@@ -1431,6 +1598,7 @@ export class GridCoreComponent {
     this.showSettings = convertToBoolean(options.showSettings);
     this.disableLocalstorage = convertToBoolean(options.disableLocalstorage);
     this.showSerialNumberCol = convertToBoolean(options.showSerialNumberCol);
+    this.showSelectableCol = convertToBoolean(options.showSelectableCol);
     this.tooltipFontSize = options.tooltipFontSize;
     this.tooltipAlignment = options.tooltipAlignment;
     this.tooltipEnterDelay = parseInt(options.tooltipEnterDelay);
@@ -1464,6 +1632,7 @@ export class GridCoreComponent {
       showSettings: false,
       disableLocalstorage: false,
       showSerialNumberCol: false,
+      showSelectableCol: false,
       perPageOptions: [25, 50, 100],
       theme: 'light',
       language: 'default',
@@ -1491,6 +1660,7 @@ export class GridCoreComponent {
       'data-show-settings': 'showSettings',
       'data-disable-localstorage': 'disableLocalstorage',
       'data-show-serial-number-col': 'showSerialNumberCol',
+      'data-show-selectable-col': 'showSelectableCol',
       'data-theme': 'theme',
       'data-language': 'default',
       'data-tooltip-font-size': 'tooltipFontSize',
@@ -1553,6 +1723,16 @@ export class GridCoreComponent {
     let index = 0;
     let nextColumnIndex = this.columns.length;
 
+    if (this.showSelectableCol) {
+      visibleColumns.push(
+        this.getSelectableColDetails({
+          index: nextColumnIndex,
+        })
+      );
+
+      nextColumnIndex++;
+    }
+
     if (this.showSerialNumberCol) {
       visibleColumns.push(
         this.getSerialNumberColDetails({
@@ -1594,7 +1774,22 @@ export class GridCoreComponent {
   setRows(rows, data = {}) {
     this.beforeSetRows();
 
+    let isRowSelectable = this.isRowSelectable.bind(this);
     this.rows = rows || [];
+
+    /** setting extra properties */
+    this.rows.forEach((d, i) => {
+      d.rowIndex = i;
+
+      let isRowSelectableResult = isRowSelectable(d);
+
+      if (typeof isRowSelectableResult === 'object') {
+        d.isRowSelectable = isRowSelectableResult.result;
+        d.isRowSelectableMessage = isRowSelectableResult.message;
+      } else {
+        d.isRowSelectable = isRowSelectableResult;
+      }
+    });
 
     if (!data.isOldRows) {
       this.originalRows = [...this.rows];
@@ -1615,6 +1810,14 @@ export class GridCoreComponent {
     }
 
     this.visibleRows = visibleRows;
+
+    let rowsRange = this.getRowsRange();
+    let visibleRowIndex = rowsRange.start;
+
+    /** setting extra properties */
+    this.visibleRows.forEach((d) => {
+      d.sNo = visibleRowIndex++;
+    });
 
     this.afterSetVisibleRows();
   }
@@ -1739,36 +1942,58 @@ export class GridCoreComponent {
     }
   }
 
-  setSettingsPopoverCheckboxValue() {
-    let columns = this.columns;
-    let uniqueId = this.uniqueId;
-
-    columns.forEach((d, i) => {
-      let $switch = this.$wrapper.querySelector(`#grid-comp-settings-column-item-switch-${uniqueId}-${i}`);
-
-      DomUtils.setInputValue($switch, !d.hidden);
-    });
-  }
-
   setColumnsHiddenProp() {
     let columns = this.columns;
     let uniqueId = this.uniqueId;
 
-    columns.forEach((d, i) => {
-      let $switch = this.$wrapper.querySelector(`#grid-comp-settings-column-item-switch-${uniqueId}-${i}`);
+    columns.forEach((d) => {
+      let $switch = this.$wrapper.querySelector(`#grid-comp-settings-column-item-switch-${uniqueId}-${d.id}`);
 
       if ($switch) {
         d.hidden = !DomUtils.getInputValue($switch);
       }
     });
+  }
 
-    this.afterSetColumnsHiddenProp();
+  setColumnsOrder(columnsOrder) {
+    if (columnsOrder) {
+      this.columnsOrder = columnsOrder;
+      return;
+    }
+
+    columnsOrder = [];
+    let getData = DomUtils.getData;
+
+    /** pushing sticky column first */
+    this.columns.forEach((d) => {
+      if (d.sticky) {
+        columnsOrder.push(d.id);
+      }
+    });
+
+    this.$wrapper.querySelectorAll('.grid-comp-settings-column-item').forEach(($ele) => {
+      columnsOrder.push(getData($ele, 'colId'));
+    });
+
+    this.columnsOrder = columnsOrder;
   }
 
   setColumnsDetailsFromStorage() {
     let storageDetails = this.getColumnsDetailsFromStorage();
     let columnWidthMapping = Utils.objectDeepGet(storageDetails, 'columnWidthMapping');
-    let hiddenMapping = Utils.objectDeepGet(storageDetails, 'columnSettings.hiddenMapping');
+    let columnSettings = Utils.objectDeepGet(storageDetails, 'columnSettings');
+    let hiddenMapping;
+    let columnsOrder;
+
+    if (columnSettings) {
+      hiddenMapping = columnSettings.hiddenMapping;
+      columnsOrder = columnSettings.columnsOrder;
+    }
+
+    if (columnsOrder) {
+      this.setColumnsOrder(columnsOrder);
+      this.sortColumns();
+    }
 
     this.columns.forEach((d) => {
       let id = d.id;
@@ -1831,18 +2056,12 @@ export class GridCoreComponent {
     DomUtils.toggleClass(this.$wrapper, 'has-right-column', hasRightColumn);
   }
 
-  setTheme(themeName) {
-    if (!themeName) {
-      return;
+  setRowProp(index, name, value) {
+    let rowData = this.rows[index];
+
+    if (rowData) {
+      rowData[name] = value;
     }
-
-    themeName = themeName.toLowerCase();
-    let oldThemeClass = 'grid-comp-theme-' + this.theme;
-    let themeClass = 'grid-comp-theme-' + themeName;
-    this.theme = themeName;
-
-    DomUtils.removeClass(this.$wrapper, oldThemeClass);
-    DomUtils.addClass(this.$wrapper, themeClass);
   }
   /** set methods - end */
 
@@ -1894,7 +2113,7 @@ export class GridCoreComponent {
       'data-tooltip-alignment': this.tooltipAlignment,
       'data-tooltip-ellipsis-only': ellipsisOnly,
       'data-tooltip-allow-html': allowHtml,
-      'data-tooltip-additional-classes': `grid-comp-tooltip grid-comp-theme-${this.theme}`,
+      'data-tooltip-additional-classes': `grid-comp-tooltip`,
     };
 
     return DomUtils.getAttributesText(data);
@@ -1989,6 +2208,13 @@ export class GridCoreComponent {
     }
   }
 
+  getSelectableColDetails(params = {}) {
+    let details = Object.assign({}, config.specialColumns.selectable);
+    details.index = params.index;
+
+    return details;
+  }
+
   getSerialNumberColDetails(params = {}) {
     let details = Object.assign({}, config.specialColumns.sNo);
     details.index = params.index;
@@ -2008,6 +2234,10 @@ export class GridCoreComponent {
     return result;
   }
 
+  getColumnsOrder() {
+    return this.columnsOrder;
+  }
+
   getColumnsDetailsFromStorage() {
     return this.storageGet(null, true);
   }
@@ -2024,6 +2254,22 @@ export class GridCoreComponent {
 
   getSelectedOptionsDisplayValue(options, value) {
     return Utils.getSelectedOptionsDisplayValue(options, value);
+  }
+
+  getSelectedRows(propName) {
+    let selectedRows = this.rows.filter((d) => d.isRowSelected);
+
+    if (propName) {
+      selectedRows = selectedRows.map((d) => d[propName]);
+    }
+
+    return selectedRows;
+  }
+
+  getSelectedRowsCount() {
+    let selectedRows = this.getSelectedRows();
+
+    return selectedRows ? selectedRows.length : 0;
   }
   /** get methods - end */
 
@@ -2062,6 +2308,7 @@ export class GridCoreComponent {
   storageSetColumnSettings() {
     let columnSettings = {
       hiddenMapping: this.getColumnHiddenMapping(),
+      columnsOrder: this.getColumnsOrder(),
     };
 
     this.storageSet('columnSettings', columnSettings);
@@ -2142,6 +2389,18 @@ export class GridCoreComponent {
     this.afterSortRowsSync(sortedRows);
   }
 
+  sortColumns() {
+    let columns = [];
+    let columnsOrder = this.getColumnsOrder();
+    let columnsObj = Utils.convertArrayToObject(this.columns);
+
+    columnsOrder.forEach((id) => {
+      columns.push(columnsObj[id]);
+    });
+
+    this.columns = columns;
+  }
+
   scrollToTop() {
     let scrollTop = this.$tableContainer.scrollTop;
 
@@ -2190,10 +2449,6 @@ export class GridCoreComponent {
 
   isEleDisabled(e) {
     return DomUtils.hasClass(e.target, 'disabled');
-  }
-
-  isSettingsColumnItemVisible(d) {
-    return !d.sticky && !d.alwaysShow;
   }
 
   show($ele) {
@@ -2252,6 +2507,48 @@ export class GridCoreComponent {
     }
 
     DomUtils.toggleClass(this.$wrapper, 'show-more-filters-tags', show);
+  }
+
+  isRowSelectable(rowData) {
+    return true;
+  }
+
+  isAllRowsSelected() {
+    /** if any row is not selected, stop the loop and return false */
+    return !this.rows.some((d) => {
+      return !d.isRowSelected && d.isRowSelectable;
+    });
+  }
+
+  toggleSelectAllRows(isChecked) {
+    if (typeof isChecked !== 'boolean') {
+      isChecked = this.isAllRowsSelected();
+    }
+
+    let setInputValue = DomUtils.setInputValue;
+
+    this.$selectableColCheckbox.forEach(($ele) => {
+      if ($ele.disabled) {
+        return;
+      }
+
+      setInputValue($ele, isChecked, { skipIfSameValue: true });
+    });
+  }
+
+  toggleSelectedRowsActionsBox(isAllRowsSelected, params = {}) {
+    if (typeof isAllRowsSelected !== 'boolean') {
+      isAllRowsSelected = this.isAllRowsSelected();
+    }
+
+    let selectedRowsCount = this.getSelectedRowsCount();
+    let hasRowsSelected = selectedRowsCount > 0;
+
+    this.$selectedRowsCount.innerHTML = selectedRowsCount;
+
+    DomUtils.toggleClass(this.$wrapper, 'has-rows-selected', hasRowsSelected);
+    DomUtils.toggleClass(this.$selectableColHeadCheckbox, 'partial', hasRowsSelected && !isAllRowsSelected);
+    DomUtils.setInputValue(this.$selectableColHeadCheckbox, isAllRowsSelected, { silent: params.silent });
   }
 
   initPopover(options) {
@@ -2322,6 +2619,13 @@ export class GridCoreComponent {
     /** empty method */
   }
 
+  saveColumnsSettings() {
+    this.setColumnsOrder();
+    this.sortColumns();
+    this.setColumnsHiddenProp();
+    this.afterSaveColumnsSettings();
+  }
+
   /** static methods - start */
   static version() {
     return config.GridCoreVersion;
@@ -2346,9 +2650,20 @@ export class GridCoreComponent {
   }
 
   static setTheme(themeName) {
-    GridCoreComponent.getAllInstances().forEach((gridComp) => {
-      gridComp.setTheme(themeName);
-    });
+    if (!themeName) {
+      return;
+    }
+
+    themeName = themeName.toLowerCase();
+    let $body = document.querySelector('body');
+    let oldThemeName = DomUtils.getData($body, 'gridCompTheme');
+
+    if (oldThemeName) {
+      DomUtils.removeClass($body, 'grid-comp-theme-' + oldThemeName);
+    }
+
+    DomUtils.addClass($body, 'grid-comp-theme-' + themeName);
+    DomUtils.setData($body, 'gridCompTheme', themeName);
   }
   /** static methods - end */
 }

@@ -159,3 +159,25 @@
   }
 }
 /* accordion component - end */
+
+/* sortable component - start */
+.sortable-comp-container {
+  position: relative;
+}
+
+.sortable-comp-item-clone {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.sortable-comp-item-active {
+  display: none !important;
+}
+
+.sortable-comp-placeholder {
+  width: 100%;
+  background-color: $activeBg;
+  border: 1px dashed $primaryColor;
+}
+/* sortable component - end */

@@ -1,4 +1,4 @@
-const iconSize = '16px';
+const defaultIconSize = '16px';
 const animatedIcons = {
   'processing-circle': `<svg viewBox="25 25 50 50">
       <circle cx="50" cy="50" r="20" fill="none" stroke-width="2" />
@@ -10,9 +10,12 @@ const animatedIcons = {
  * @function
  * @param {string} name - "id" attribute (without "icon-" text e.g user instead of icon-user) defined in symbol tag in getAllSvgIcons()
  */
-export function icon(name, addtionalClassNames = '') {
+export function icon(name, data = {}) {
+  let addtionalClassNames = data.className || '';
+  let iconSize = data.size || defaultIconSize;
+
   return `
-    <svg class="grid-comp-icon grid-comp-icon-${name} ${addtionalClassNames}" style="width: ${iconSize};height: ${iconSize};">
+    <svg class="grid-comp-icon grid-comp-icon-${name} ${addtionalClassNames}" style="font-size: ${iconSize};width: 1em;height: 1em;">
       <use xlink:href="#icon-${name}"></use>
     </svg>
   `;
@@ -87,6 +90,10 @@ function getAllSvgIcons() {
 
     <svg id="icon-clear" viewBox="0 0 640 512">
       <path fill="currentColor" d="M469.66 181.65l-11.31-11.31c-3.12-3.12-8.19-3.12-11.31 0L384 233.37l-63.03-63.03c-3.12-3.12-8.19-3.12-11.31 0l-11.31 11.31c-3.12 3.12-3.12 8.19 0 11.31L361.38 256l-63.03 63.03c-3.12 3.12-3.12 8.19 0 11.31l11.31 11.31c3.12 3.12 8.19 3.12 11.31 0L384 278.63l63.03 63.03c3.12 3.12 8.19 3.12 11.31 0l11.31-11.31c3.12-3.12 3.12-8.19 0-11.31L406.63 256l63.03-63.03a8.015 8.015 0 0 0 0-11.32zM576 64H205.26C188.28 64 172 70.74 160 82.74L9.37 233.37c-12.5 12.5-12.5 32.76 0 45.25L160 429.25c12 12 28.28 18.75 45.25 18.75H576c35.35 0 64-28.65 64-64V128c0-35.35-28.65-64-64-64zm32 320c0 17.64-14.36 32-32 32H205.26c-8.55 0-16.58-3.33-22.63-9.37L32 256l150.63-150.63c6.04-6.04 14.08-9.37 22.63-9.37H576c17.64 0 32 14.36 32 32v256z"></path>
+    </svg>
+
+    <svg id="icon-grip" viewBox="0 0 320 512">
+      <path fill="currentColor" d="M96 32H32C14.33 32 0 46.33 0 64v64c0 17.67 14.33 32 32 32h64c17.67 0 32-14.33 32-32V64c0-17.67-14.33-32-32-32zm0 160H32c-17.67 0-32 14.33-32 32v64c0 17.67 14.33 32 32 32h64c17.67 0 32-14.33 32-32v-64c0-17.67-14.33-32-32-32zm0 160H32c-17.67 0-32 14.33-32 32v64c0 17.67 14.33 32 32 32h64c17.67 0 32-14.33 32-32v-64c0-17.67-14.33-32-32-32zM288 32h-64c-17.67 0-32 14.33-32 32v64c0 17.67 14.33 32 32 32h64c17.67 0 32-14.33 32-32V64c0-17.67-14.33-32-32-32zm0 160h-64c-17.67 0-32 14.33-32 32v64c0 17.67 14.33 32 32 32h64c17.67 0 32-14.33 32-32v-64c0-17.67-14.33-32-32-32zm0 160h-64c-17.67 0-32 14.33-32 32v64c0 17.67 14.33 32 32 32h64c17.67 0 32-14.33 32-32v-64c0-17.67-14.33-32-32-32z"></path>
     </svg>
   `;
 }

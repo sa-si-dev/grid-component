@@ -20,18 +20,40 @@
   min-height: 10vh;
   max-height: 50vh;
   padding: 10px 0;
+
+  .sortable-comp-container {
+    padding: 0 $settingsPopoverPadding;
+  }
+
+  .sortable-comp-item-clone {
+    width: calc(100% - #{$settingsPopoverPadding * 2});
+    left: $settingsPopoverPadding;
+    background-color: $activeBg;
+  }
+}
+
+.grid-comp-settings-column-item-order-button {
+  width: $settingsColumnItemOrderButtonWidth;
+  justify-content: flex-start;
+  opacity: 0.4;
+  cursor: move;
 }
 
 .grid-comp-settings-column-item {
   display: flex;
   align-items: center;
+  width: 100%;
   height: 36px;
-  margin: 0 20px;
   padding: 0 4px;
   border-bottom: 1px solid $borderColor;
 
   &:hover {
     background-color: $activeBg;
+
+    .grid-comp-settings-column-item-order-button {
+      color: $primaryColor;
+      opacity: 0.6;
+    }
   }
 
   &:last-child {
@@ -41,8 +63,9 @@
 
 .grid-comp-settings-column-item-name {
   @include ellipsis;
-  width: calc(100% - #{$switchWidth});
+  width: calc(100% - #{$switchWidth + $settingsColumnItemOrderButtonWidth});
   padding-right: 4px;
+  user-select: none;
 }
 
 .grid-comp-settings-popover-footer {

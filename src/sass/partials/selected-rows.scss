@@ -1,0 +1,66 @@
+.grid-comp-selectable-col-checkbox-container {
+  display: inline-flex;
+}
+
+.grid-comp-selected-rows-action-box-wrapper {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: $selectableColWidth + $selectedRowsClearButtonWidth;
+  height: $theadHeight;
+  z-index: $zIndexSelectedRowsActionsBox;
+  @include prefix(transform, translate3d(0, $headerHeight, 0));
+}
+
+.grid-comp-selected-rows-clear-container {
+  display: flex;
+  justify-content: center;
+  width: $selectedRowsClearButtonWidth;
+  opacity: 0;
+  pointer-events: none;
+
+  .grid-comp-icon {
+    color: $iconColor;
+  }
+}
+
+.grid-comp-selected-rows-action-box-content {
+  display: none;
+  align-items: center;
+}
+
+.grid-comp-selected-rows-count {
+  margin: 0 20px;
+}
+
+.grid-comp-selected-rows-action-button {
+  background-color: $primaryBg;
+  height: 26px;
+  margin-right: 6px;
+}
+
+.grid-comp-wrapper {
+  &.has-filters-tags {
+    .grid-comp-selected-rows-action-box-wrapper {
+      @include prefix(transform, translate3d(0, $headerHeight + $filtersTagsHeight, 0));
+    }
+  }
+
+  &.has-rows-selected {
+    .grid-comp-selected-rows-action-box-wrapper {
+      width: 100%;
+      background-color: $activeBg;
+    }
+
+    .grid-comp-selected-rows-clear-container {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .grid-comp-selected-rows-action-box-content {
+      display: flex;
+    }
+  }
+}

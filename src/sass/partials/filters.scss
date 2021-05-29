@@ -6,7 +6,7 @@
   width: 100vw;
   height: 100vh;
   background-color: $popupBg;
-  z-index: $minZIndex + 6;
+  z-index: $zIndexFiltersBox;
 }
 
 .grid-comp-filters-box-container {
@@ -15,7 +15,7 @@
   top: 0;
   width: 400px;
   height: 100%;
-  background: $primaryBg;
+  background-color: $primaryBg;
 }
 
 .grid-comp-filters-box-header {
@@ -64,7 +64,7 @@
   line-height: 12px;
   padding: 2px 5px;
   border-radius: 5px;
-  background: $primaryColor;
+  background-color: $primaryColor;
   color: $primaryFontColor;
   margin-right: 10px;
 }
@@ -128,7 +128,7 @@
   position: absolute;
   top: 3px;
   left: #{$colPaddingHorizontal - $filtersTagsContainerPadding};
-  z-index: $minZIndex + 4;
+  z-index: $zIndexFiltersTags;
   width: calc(80% - #{$colPaddingHorizontal});
   max-height: 50vh;
   padding: #{$filtersTagsContainerPadding - 3px} #{$filtersTagsContainerPadding + $filtersTagsMoreButtonWidth} 0 $filtersTagsContainerPadding;
@@ -184,8 +184,6 @@
   margin-left: 8px;
 
   .grid-comp-icon {
-    width: 12px !important;
-    height: 12px !important;
     color: $iconColor;
   }
 
