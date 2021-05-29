@@ -153,6 +153,12 @@ class ApiUtils {
     let grandTotal = rows.length;
     rows = rows.splice(startIndex, count);
 
+    rows = rows.map((d) => {
+      delete d.isRowSelected;
+
+      return d;
+    });
+
     return {
       rows,
       grandTotal,

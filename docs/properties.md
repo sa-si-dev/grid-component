@@ -19,6 +19,8 @@
 | showFilters | Boolean | false | Show filters button to open filters |
 | showSettings | Boolean | false | Show settings button to customize columns |
 | showSerialNumberCol | Boolean | false | Show serial number column |
+| showSelectableCol | Boolean | false | Show checkbox column to select rows ([more details](https://github.com/{{repo}}/discussions/1)) |
+| selectedRowsActions | Array\<String\> \| Array\<Object\> | | List of action buttons to show when rows selected.<br/>`['Delete', 'Change Status']`<br/>-- OR --<br/>`[`<br/>&nbsp;&nbsp;`{ label: 'Delete', value: 'delete' },`<br/>&nbsp;&nbsp;`{ label: 'Change Status', value: 'change_status' },`<br/> `]` |
 | theme | String | light | Default available themes are light and dark. But you could define custom themes and use here. ([more details](theming.md)) |
 | language | String | default | Language name to get i18n text ([more details](internationalization.md)) |
 | tooltipFontSize | String | 14px | Font size for tooltip |
@@ -40,12 +42,13 @@
 
 | Name | Type | Default value | Description |
 | --- | --- | --- | --- |
-| id | String | | Unique column ID |
+| id | String | | Unique column ID (string without space or special characters) |
 | name | String | | Column header text |
 | key | String | | Property name to get column value from row details |
 | width | String | | Width of the column (in px) |
 | align | String | left | CSS text align value (left, right, center) |
 | renderer | Function | | Callback method name to render column value |
+| headRenderer | Function | | Callback method name to render column header |
 | sticky | Boolean | false | Make the column fixed on scroll horizontally |
 | resizable | Boolean | | Allow to resize width of the column |
 | sortable | Boolean | | Make the column sortable |

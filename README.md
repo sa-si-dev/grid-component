@@ -15,8 +15,10 @@
 * Sorting
 * Resizable column
 * Hide columns
+* Change columns order
 * Sticky table header
 * Sticky columns
+* Checkbox column for rows seletion
 * Theming
 * Internationalization
 

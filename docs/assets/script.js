@@ -63,4 +63,18 @@ function initPageGetStarted() {
 
 function initPageDemo() {
   let sampleGrid = new SampleGrid();
+
+  document.addEventListener('change', onDocumentChange);
+}
+
+function onDocumentChange(e) {
+  let $ele = e.target;
+
+  if ($ele.closest('.demo-grid-theme-input')) {
+    onDemoGridThemeChange(e);
+  }
+}
+
+function onDemoGridThemeChange(e) {
+  GridCoreComponent.setTheme(e.target.value);
 }

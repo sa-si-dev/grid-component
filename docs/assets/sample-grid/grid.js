@@ -3,7 +3,17 @@ class GridComponent extends GridCoreComponent {
     let defaultOptions = {
       exportable: true,
       showSerialNumberCol: true,
+      showSelectableCol: true,
+      selectedRowsActions: [
+        { label: 'Delete', value: 'delete' },
+        { label: 'Change Status', value: 'change_status' },
+      ],
+      // selectedRowsActions: ['Delete', 'Change Status'],
     };
+
+    if (options.rows) {
+      options.rowsFromServer = false;
+    }
 
     super(Object.assign(defaultOptions, options));
   }
@@ -42,9 +52,8 @@ class SampleGrid extends GridComponent {
       uniqueKey: 'sampleGrid',
       apiUrl: 'api/sample-grid',
       columns: sampleGrid.columns,
-      // rowsFromServer: false,
-      // rows: getRows(210),
-      heightOffset: '70px',
+      // rows: ApiUtils.getRows(210),
+      heightOffset: '110px',
       sortable: true,
       // perPageOptions: [25, 50, 100, 200],
       showFilters: true,
@@ -66,5 +75,27 @@ class SampleGrid extends GridComponent {
 
   rendererHiddenCol1Filter(colData, $container) {
     $container.innerHTML = 'Custom filter section for hidden column';
+  }
+
+  getSerialNumberColDetails(params = {}) {
+    let details = super.getSerialNumberColDetails(params);
+    details.width = '30px';
+
+    return details;
+  }
+
+  isRowSelectable(rowData) {
+    // return true;
+    let rowIndex = rowData.rowIndex;
+    let result = rowIndex === 0 || rowIndex % 6 !== 0;
+
+    if (!result) {
+      result = {
+        result,
+        message: 'No permission',
+      };
+    }
+
+    return result;
   }
 }

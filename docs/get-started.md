@@ -16,8 +16,10 @@ Every project has its own way of data handling and business logic. Considering t
 * Sorting
 * Resizable column
 * Hide columns
+* Change columns order
 * Sticky table header
 * Sticky columns
+* Checkbox column for rows seletion
 * Theming
 * Internationalization
 

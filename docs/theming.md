@@ -31,12 +31,8 @@ class GridComponent extends GridCoreComponent {
 }
 ```
 
-Theme could be changed runtime by calling `setTheme` method
+Theme could be changed in runtime by calling `setTheme` method
 
 ```js
-/** to change for a specific grid */
-sampleGrid.setTheme('blue');
-
-/** to change for all active grid instances */
 GridComponent.setTheme('blue');
 ```
