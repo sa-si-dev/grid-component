@@ -53,4 +53,9 @@ class SampleGrid extends GridComponent {
 let sampleGrid = new SampleGrid();
 ```
 
+```html
+<!-- dom element to render the grid -->
+<div id="sample-grid"></div>
+````
+
 !> To define list of columns detail, refer [Properties](properties.md?id=column-properties) page.
