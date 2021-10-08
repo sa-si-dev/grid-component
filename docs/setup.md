@@ -19,7 +19,7 @@ class GridComponent extends GridCoreComponent {
 }
 ```
 
-!> Refer [grid-core.js](https://github.com/{{repo}}/blob/master/src/grid-core.js) file to know all the available methods to override them if required.
+!> Refer [grid-core.js](https://github.com/{{repo}}/blob/main/src/grid-core.js) file to know all the available methods to override them if required.
 
 ### Create sample grid
 
@@ -31,9 +31,25 @@ class SampleGrid extends GridComponent {
   constructor() {
     let options = {
       ele: '#sample-grid',
-      title: sampleGridDetails.title,
+      title: 'This is a sample grid',
       uniqueKey: 'sampleGrid',
-      columns: sampleGridDetails.columns,
+      columns: [
+        {
+          id: 'firstName',
+          name: 'First Name',
+          key: 'first_name',
+        },
+        {
+          id: 'lastName',
+          name: 'Last Name',
+          key: 'last_name',
+        },
+        {
+          id: 'country',
+          name: 'Country',
+          key: 'country',
+        },
+      ],
     };
 
     super(Object.assign(options));
@@ -56,6 +72,6 @@ let sampleGrid = new SampleGrid();
 ```html
 <!-- dom element to render the grid -->
 <div id="sample-grid"></div>
-````
+```
 
 !> To define list of columns detail, refer [Properties](properties.md?id=column-properties) page.
